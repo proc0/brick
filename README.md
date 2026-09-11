@@ -1,2 +1,3 @@
-# brick
-Responsive and reactive UI header-only library in C
+# Brick
+
+A UI library extension for Clay.
