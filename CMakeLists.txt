@@ -3,7 +3,9 @@
 #  Header-only, STB-style. C99 + C++20.
 #
 #  Build (developer):
-#    cmake -B build
+#    cmake -B build (default)
+#    cmake -B build -S . -G "MinGW Makefiles" (MSYS2 aka MinGW aka GCC on Windows)
+#    
 #    cmake --build build
 #    ctest --test-dir build --output-on-failure
 #
@@ -35,37 +37,32 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD        20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Default to Release for reasonable optimization in examples
+# Default to Release for examples
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
     set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
 endif()
 
 
-# ============================================================================
-# 1. DEPENDENCY: Clay
+# DEPENDENCY: Clay
+# Clay's CMakeLists does not define a library target, it only builds
+# examples. This only pulls Clay source by defining an empty subdir.
 #
-#    We use FetchContent_Populate (NOT MakeAvailable) because Clay's own
-#    CMakeLists.txt does not define a library target — it only builds
-#    examples (gated on CLAY_INCLUDE_ALL_EXAMPLES). We want the *source
-#    files* (clay.h, renderers/) and nothing else.
-#
-#    Brick "owns" Clay: brick.h defines CLAY_IMPLEMENTATION internally
-#    before #include "clay.h", so the user never touches that macro.
-# ============================================================================
+# NOTE: Brick includes Clay: brick.h defines CLAY_IMPLEMENTATION internally
+# before #include "clay.h", so the user only manages Brick.
 
 include(FetchContent)
 
 FetchContent_Declare(
     clay
-    GIT_REPOSITORY https://github.com/DestinyXspace/Clay.git
-    GIT_TAG        v1.0                  # ← pin to the tag you test against
+    GIT_REPOSITORY https://github.com/nicbarker/clay.git
+    GIT_TAG        head # TODO: update to a tag once Clay fixes incosistencies. Ticket: https://github.com/nicbarker/clay/issues/655
+    GIT_PROGRESS   TRUE 
     GIT_SHALLOW    TRUE
+    # Point to a directory that does not exist, preventing add_subdirectory()
+    SOURCE_SUBDIR nonexistent_dir
 )
 
-FetchContent_GetProperties(clay)
-if(NOT clay_POPULATED)
-    FetchContent_Populate(clay)
-endif()
+FetchContent_MakeAvailable(clay)
 
 # Clay doesn't create a CMake target. We wrap it.
 # This target exists purely to propagate the include directory so that
@@ -77,16 +74,15 @@ target_include_directories(clay INTERFACE
     ${clay_SOURCE_DIR}                  # → clay.h, renderers/, etc.
 )
 
+target_compile_features(clay INTERFACE c_std_99)
 
-# ============================================================================
-# 2. BRICK: the public INTERFACE library
+# BRICK INTERFACE
 #
-#    Header-only. No compiled artifact. The "library" is just:
-#      - the include directory (where brick.h lives)
-#      - a dependency on Clay (so clay.h + renderers/ are also found)
+# Header-only. No compiled artifact.
+#  - the include directory (where brick.h lives)
+#  - a dependency on Clay (so clay.h + renderers/)
 #
-#    Downstream users link Brick::Brick and get both include paths.
-# ============================================================================
+# Downstream users link Brick::Brick and get both include paths.
 
 add_library(brick INTERFACE)
 add_library(Brick::Brick ALIAS brick)
@@ -107,9 +103,10 @@ target_compile_features(brick INTERFACE c_std_99)
 # 3. OPTIONS
 # ============================================================================
 
-option(BRICK_BUILD_TESTS    "Build unit tests"           ON)
+option(BRICK_BUILD_TESTS    "Build unit tests"           OFF)
 option(BRICK_BUILD_EXAMPLES "Build example programs"     ON)
-
+# Generate compile_commands.json for LSP
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # ============================================================================
 # 4. TESTS
@@ -192,20 +189,20 @@ endif()
 if(BRICK_BUILD_EXAMPLES)
 
     # --- Always builds: no renderer, just exercises Brick's API headlessly --
-    add_subdirectory(examples/smoke_test)
+    add_subdirectory(examples/raylib-simple)
 
     # --- OpenGL renderer (Clay's) -------------------------------------------
-    find_package(OpenGL QUIET)
-    if(OpenGL_FOUND)
-        add_subdirectory(examples/button_demo)
-        add_subdirectory(examples/tab_demo)
-    endif()
+    # find_package(OpenGL QUIET)
+    # if(OpenGL_FOUND)
+    #     add_subdirectory(examples/button_demo)
+    #     add_subdirectory(examples/tab_demo)
+    # endif()
 
-    # --- SDL2 renderer (Clay's) ---------------------------------------------
-    find_package(SDL2 QUIET)
-    if(SDL2_FOUND)
-        add_subdirectory(examples/scroll_demo)
-    endif()
+    # # --- SDL2 renderer (Clay's) ---------------------------------------------
+    # find_package(SDL2 QUIET)
+    # if(SDL2_FOUND)
+    #     add_subdirectory(examples/scroll_demo)
+    # endif()
 
 endif()
 
@@ -229,20 +226,20 @@ endif()
 #    so user source code is identical across all three usage scenarios.
 # ============================================================================
 
-include(GNUInstallDirs)
+# include(GNUInstallDirs)
 
-install(FILES
-    brick.h
-    ${clay_SOURCE_DIR}/clay.h
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-)
+# install(FILES
+#     brick.h
+#     ${clay_SOURCE_DIR}/clay.h
+#     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+# )
 
-# Clay renderers: install all .h files, preserve subdirectory structure
-install(DIRECTORY
-    ${clay_SOURCE_DIR}/renderers/
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/renderers
-    FILES_MATCHING PATTERN "*.h"
-)
+# # Clay renderers: install all .h files, preserve subdirectory structure
+# install(DIRECTORY
+#     ${clay_SOURCE_DIR}/renderers/
+#     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/renderers
+#     FILES_MATCHING PATTERN "*.h"
+# )
 
 # (No .a / .so to install. No CMake config files needed for the
 #  FetchContent path. If you later want find_package(Brick) to work
@@ -256,28 +253,28 @@ install(DIRECTORY
 #    downstream CMake project instead of FetchContent. Harmless to include.
 # ============================================================================
 
-include(CMakePackageConfigHelpers)
+# include(CMakePackageConfigHelpers)
 
 # Generate BrickTargets.cmake (exports Brick::Brick + Clay::Clay)
-install(TARGETS brick clay
-    EXPORT BrickTargets
-    NAMESPACE Brick::
-)
+# install(TARGETS brick clay
+#     EXPORT BrickTargets
+#     NAMESPACE Brick::
+# )
 
 # Hmm — the targets have different namespaces (Brick::Brick vs Clay::Clay).
 # Simpler: just export `brick` and let the alias resolve at use-time.
 # Actually, for INTERFACE libs the export is trivial. Let's keep it minimal:
 
-install(EXPORT BrickTargets
-    FILE        BrickTargets.cmake
-    NAMESPACE   Brick::
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/Brick
-)
+# install(EXPORT BrickTargets
+#     FILE        BrickTargets.cmake
+#     NAMESPACE   Brick::
+#     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/Brick
+# )
 
-write_basic_package_config_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/BrickConfig.cmake.in
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/Brick
-    PACKAGE_NAME Brick
-)
+# write_basic_package_config_file(
+#     ${CMAKE_CURRENT_SOURCE_DIR}/cmake/BrickConfig.cmake.in
+#     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/Brick
+#     PACKAGE_NAME Brick
+# )
 
 # (Create cmake/BrickConfig.cmake.in — see note below this block.)
