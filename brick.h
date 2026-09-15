@@ -1526,7 +1526,8 @@ void Brick_BeginFloatingPanel(void) {
                 .height = CLAY_SIZING_PERCENT(0.5f),
             },
             .padding = CLAY_PADDING_ALL(BRICK_STYLE_PADDING_SMALL), 
-            .childGap = BRICK_STYLE_PADDING_SMALL, 
+            .childAlignment = { .x = CLAY_ALIGN_X_CENTER, .y = CLAY_ALIGN_Y_TOP },
+            .childGap = BRICK_STYLE_PADDING_SMALL,
             .layoutDirection = CLAY_TOP_TO_BOTTOM 
         },
         .backgroundColor = BRICK_THEME_BACKGROUND,

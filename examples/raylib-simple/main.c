@@ -37,6 +37,10 @@ int main(void) {
     Brick_ElementId helloWorld_ButtonId = Brick_CreateButton("BRICK");
 
     while(!WindowShouldClose()) {
+        // Use Brick_Resize with window dimensions for esponsive element and container sizes
+        if (IsWindowResized()) {
+            Brick_Resize((float)GetScreenWidth(), (float)GetScreenHeight());
+        }
         // Update Brick Events. Brick_UpdateEvents take pointer information to pass on to Clay:
         // the mouse position (x and y), the mouseWheel scroll position (scrollX, scrollY),
         // whether the mouse is pressed or released (the exact frame when this happens)
@@ -55,6 +59,17 @@ int main(void) {
         // Update events with pointer data and delta time
         Brick_UpdateEvents(pointerData, GetFrameTime());
 
+        // Handle element events, either by saving the EventArray returned by UpdateEvents (not used now)
+        // or using any of the event queries i.e. IsEventTriggeredById
+        // Here we set the mouse cursor to the hand on button hover, for this specific button
+        if (Brick_IsEventTriggeredById(BRICK_EVENT_TYPE_HOVER, helloWorld_ButtonId)) {
+            SetMouseCursor(MOUSE_CURSOR_POINTING_HAND);
+        }
+        // The CLEAR event happens once when the HOVER ends
+        if (Brick_IsEventTriggeredById(BRICK_EVENT_TYPE_CLEAR, helloWorld_ButtonId)) {
+            SetMouseCursor(MOUSE_CURSOR_DEFAULT);
+        }
+        
         // Raylib begin frame
         BeginDrawing();
         ClearBackground(DARKGRAY);
@@ -64,9 +79,15 @@ int main(void) {
             // A floating panel at the center of the screen
             Brick_BeginFloatingPanel();
                 // inline text for the title
-                Brick_InlineText("Hello World!");
+                Brick_InlineText("Hello");
                 // the button that was created during init
                 Brick_LayoutButton(helloWorld_ButtonId);
+
+                if (Brick_IsButtonToggled(helloWorld_ButtonId)) {
+                    Brick_BeginPanel();
+                        Brick_InlineText("World!");
+                    Brick_EndPanel();
+                }
             // Always close containers
             Brick_EndFloatingPanel();
         // Close the main layout and save Clay RenderCommands to pass unto the Clay renderer.
