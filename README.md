@@ -24,6 +24,8 @@ Brick is render agnostic UI component library extending the UI layout library [C
 [Quick Start](#)
 [Motivation](#)
 [Objectives](#)
+[Setup](#)
+[Components](#)
 [References](#)
 
 OBJ:

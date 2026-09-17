@@ -35,14 +35,61 @@ int main(void) {
     // Create Brick elements and save their Ids to be used with the same element's
     // Layout<element> function. Here we create a button and save its ID.
     Brick_ElementId file_ButtonId = Brick_CreateLabelButton("File");
-
     Brick_ElementId fileOpen_ButtonId = Brick_CreateLabelButton("Open");
     Brick_ElementId fileSave_ButtonId = Brick_CreateLabelButton("Save");
-    Brick_ElementId fileSettings_ButtonId = Brick_CreateLabelButton("Settings");
+    Brick_ElementId fileExport_ButtonId = Brick_CreateLabelButton("Export");
     Brick_ElementId fileQuit_ButtonId = Brick_CreateLabelButton("Quit");
 
-    Brick_ElementId fileMenuGroup[4] = { fileOpen_ButtonId, fileSave_ButtonId, fileSettings_ButtonId, fileQuit_ButtonId };
+    Brick_ElementId fileMenuGroup[4] = { fileOpen_ButtonId, fileSave_ButtonId, fileExport_ButtonId, fileQuit_ButtonId };
     Brick_ElementId fileMenu_ButtonGroupId = Brick_CreateButtonGroup(fileMenuGroup, 4);
+
+
+    Brick_ElementId edit_ButtonId = Brick_CreateLabelButton("Edit");
+    Brick_ElementId editCopy_ButtonId = Brick_CreateLabelButton("Copy");
+    Brick_ElementId editPaste_ButtonId = Brick_CreateLabelButton("Paste");
+    Brick_ElementId editProject_ButtonId = Brick_CreateLabelButton("Project");
+    Brick_ElementId editSettings_ButtonId = Brick_CreateLabelButton("Settings");
+
+    Brick_ElementId editMenuGroup[4] = { editCopy_ButtonId, editPaste_ButtonId, editProject_ButtonId, editSettings_ButtonId };
+    Brick_ElementId editMenu_ButtonGroupId = Brick_CreateButtonGroup(editMenuGroup, 4);
+
+
+    Brick_ElementId page_ButtonId = Brick_CreateLabelButton("Page");
+    Brick_ElementId pageResize_ButtonId = Brick_CreateLabelButton("Resize");
+    Brick_ElementId pageCrop_ButtonId = Brick_CreateLabelButton("Crop");
+    Brick_ElementId pageLayer_ButtonId = Brick_CreateLabelButton("Layer");
+
+    Brick_ElementId pageMenuGroup[3] = { pageResize_ButtonId, pageCrop_ButtonId, pageLayer_ButtonId };
+    Brick_ElementId pageMenu_ButtonGroupId = Brick_CreateButtonGroup(pageMenuGroup, 3);
+
+
+    Brick_ElementId view_ButtonId = Brick_CreateLabelButton("View");
+    Brick_ElementId viewShowSidebar_ButtonId = Brick_CreateLabelButton("Show Sidebar");
+    Brick_ElementId viewHideSidebar_ButtonId = Brick_CreateLabelButton("Hide Sidebar");
+    Brick_ElementId viewColorTheme_ButtonId = Brick_CreateLabelButton("Color Theme");
+
+    Brick_ElementId viewMenuGroup[3] = { viewShowSidebar_ButtonId, viewHideSidebar_ButtonId, viewColorTheme_ButtonId };
+    Brick_ElementId viewMenu_ButtonGroupId = Brick_CreateButtonGroup(viewMenuGroup, 3);
+
+
+    Brick_ElementId tool_ButtonId = Brick_CreateLabelButton("Tool");
+    Brick_ElementId toolExtensions_ButtonId = Brick_CreateLabelButton("Extensions");
+    Brick_ElementId toolTransform_ButtonId = Brick_CreateLabelButton("Transform");
+    Brick_ElementId toolFilters_ButtonId = Brick_CreateLabelButton("Filters");
+
+    Brick_ElementId toolMenuGroup[3] = { toolExtensions_ButtonId, toolTransform_ButtonId, toolFilters_ButtonId };
+    Brick_ElementId toolMenu_ButtonGroupId = Brick_CreateButtonGroup(toolMenuGroup, 3);
+
+
+    Brick_ElementId help_ButtonId = Brick_CreateLabelButton("Help");
+    Brick_ElementId helpAbout_ButtonId = Brick_CreateLabelButton("About");
+
+    Brick_ElementId helpMenuGroup[1] = { helpAbout_ButtonId };
+    Brick_ElementId helpMenu_ButtonGroupId = Brick_CreateButtonGroup(helpMenuGroup, 1);
+
+
+    Brick_ElementId topMenuGroup[6] = { file_ButtonId, edit_ButtonId, page_ButtonId, view_ButtonId, tool_ButtonId, help_ButtonId };
+    Brick_ElementId topMenu_ButtonGroupId = Brick_CreateButtonGroup(topMenuGroup, 6);
 
     while(!WindowShouldClose()) {
         // Use Brick_Resize with window dimensions for esponsive element and container sizes
@@ -67,6 +114,18 @@ int main(void) {
         // Update events with pointer data and delta time
         Brick_UpdateEvents(pointerData, GetFrameTime());
 
+        // TODO: add the element id to the even for this to work and not have to do giant if_else in layout
+        // Brick_EventArray eventArray = Brick_UpdateEvents(pointerData, GetFrameTime());
+
+        // Brick_ElementId currentMenuId = (Brick_ElementId){0, 0};
+        // for (int i=0; i<eventArray.length; i++) {
+        //     Brick_Event* event = Brick_EventArray_Get(&eventArray, i);
+
+        //     if (event.eventType == BRICK_EVENT_TYPE_PRESS) {
+        //         currentMenuId = event.elementId;
+        //     }
+
+        // }
         // Handle element events, either by saving the EventArray returned by UpdateEvents (not used now)
         // or using any of the event queries i.e. IsEventTriggeredById
         // Here we set the mouse cursor to the hand on button hover, for this specific button
@@ -87,14 +146,48 @@ int main(void) {
             // A floating panel at the center of the screen
             Brick_BeginFloatingPanel();
                 // the button that was created during init
-                Brick_LayoutLabelButton(file_ButtonId);
+                Brick_BeginWrapper();
+                Brick_BeginHorizontalStack();
+                    Brick_LayoutButtonGroup(topMenu_ButtonGroupId);
+                Brick_EndHorizontalStack();
+                Brick_EndWrapper();
 
                 if (Brick_IsButtonToggled(file_ButtonId)) {
-                    Brick_BeginWrapper();
+                    Brick_BeginDropdown(file_ButtonId);
                     Brick_BeginVerticalStack();
                         Brick_LayoutButtonGroup(fileMenu_ButtonGroupId);
                     Brick_EndVerticalStack();
-                    Brick_EndWrapper();
+                    Brick_EndDropdown();
+                } else if (Brick_IsButtonToggled(edit_ButtonId)) {
+                    Brick_BeginDropdown(edit_ButtonId);
+                    Brick_BeginVerticalStack();
+                        Brick_LayoutButtonGroup(editMenu_ButtonGroupId);
+                    Brick_EndVerticalStack();
+                    Brick_EndDropdown();
+                } else if (Brick_IsButtonToggled(page_ButtonId)) {
+                    Brick_BeginDropdown(page_ButtonId);
+                    Brick_BeginVerticalStack();
+                        Brick_LayoutButtonGroup(pageMenu_ButtonGroupId);
+                    Brick_EndVerticalStack();
+                    Brick_EndDropdown();
+                } else if (Brick_IsButtonToggled(view_ButtonId)) {
+                    Brick_BeginDropdown(view_ButtonId);
+                    Brick_BeginVerticalStack();
+                        Brick_LayoutButtonGroup(viewMenu_ButtonGroupId);
+                    Brick_EndVerticalStack();
+                    Brick_EndDropdown();
+                } else if (Brick_IsButtonToggled(tool_ButtonId)) {
+                    Brick_BeginDropdown(tool_ButtonId);
+                    Brick_BeginVerticalStack();
+                        Brick_LayoutButtonGroup(toolMenu_ButtonGroupId);
+                    Brick_EndVerticalStack();
+                    Brick_EndDropdown();
+                } else if (Brick_IsButtonToggled(help_ButtonId)) {
+                    Brick_BeginDropdown(help_ButtonId);
+                    Brick_BeginVerticalStack();
+                        Brick_LayoutButtonGroup(helpMenu_ButtonGroupId);
+                    Brick_EndVerticalStack();
+                    Brick_EndDropdown();
                 }
             // Always close containers
             Brick_EndFloatingPanel();
