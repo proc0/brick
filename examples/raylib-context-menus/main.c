@@ -36,6 +36,14 @@ int main(void) {
     // Layout<element> function. Here we create a button and save its ID.
     Brick_ElementId file_ButtonId = Brick_CreateLabelButton("File");
 
+    Brick_ElementId fileOpen_ButtonId = Brick_CreateLabelButton("Open");
+    Brick_ElementId fileSave_ButtonId = Brick_CreateLabelButton("Save");
+    Brick_ElementId fileSettings_ButtonId = Brick_CreateLabelButton("Settings");
+    Brick_ElementId fileQuit_ButtonId = Brick_CreateLabelButton("Quit");
+
+    Brick_ElementId fileMenuGroup[4] = { fileOpen_ButtonId, fileSave_ButtonId, fileSettings_ButtonId, fileQuit_ButtonId };
+    Brick_ElementId fileMenu_ButtonGroupId = Brick_CreateButtonGroup(fileMenuGroup, 4);
+
     while(!WindowShouldClose()) {
         // Use Brick_Resize with window dimensions for esponsive element and container sizes
         if (IsWindowResized()) {
@@ -62,11 +70,11 @@ int main(void) {
         // Handle element events, either by saving the EventArray returned by UpdateEvents (not used now)
         // or using any of the event queries i.e. IsEventTriggeredById
         // Here we set the mouse cursor to the hand on button hover, for this specific button
-        if (Brick_IsEventTriggeredById(BRICK_EVENT_TYPE_HOVER, file_ButtonId)) {
+        if (Brick_IsEventTriggered(BRICK_EVENT_TYPE_HOVER)) {
             SetMouseCursor(MOUSE_CURSOR_POINTING_HAND);
         }
         // The CLEAR event happens once when the HOVER ends
-        if (Brick_IsEventTriggeredById(BRICK_EVENT_TYPE_CLEAR, file_ButtonId)) {
+        if (Brick_IsEventTriggered(BRICK_EVENT_TYPE_CLEAR)) {
             SetMouseCursor(MOUSE_CURSOR_DEFAULT);
         }
         
@@ -82,9 +90,11 @@ int main(void) {
                 Brick_LayoutLabelButton(file_ButtonId);
 
                 if (Brick_IsButtonToggled(file_ButtonId)) {
-                    Brick_BeginPanel();
-                        Brick_InlineText("World!");
-                    Brick_EndPanel();
+                    Brick_BeginWrapper();
+                    Brick_BeginVerticalStack();
+                        Brick_LayoutButtonGroup(fileMenu_ButtonGroupId);
+                    Brick_EndVerticalStack();
+                    Brick_EndWrapper();
                 }
             // Always close containers
             Brick_EndFloatingPanel();
