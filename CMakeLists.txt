@@ -30,7 +30,7 @@ set(PROJECT_VERSION "0.1.0")
 
 project(brick
     VERSION ${PROJECT_VERSION}
-    DESCRIPTION "A UI library extension for Clay."
+    DESCRIPTION "Component library for Clay UI"
     LANGUAGES C CXX
 )
 

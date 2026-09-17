@@ -2,7 +2,7 @@
 +-------------+
 |    BRICK    |
 +-------------+ 
-Clay Extension
+Component library for Clay UI
 
 USAGE SUMMARY
 This is a very high level overview.
