@@ -34,62 +34,68 @@ int main(void) {
 
     // Create Brick elements and save their Ids to be used with the same element's
     // Layout<element> function. Here we create a button and save its ID.
+
+    // file menu button
     Brick_ElementId file_ButtonId = Brick_CreateLabelButton("File");
+    // file menu option buttons
     Brick_ElementId fileOpen_ButtonId = Brick_CreateLabelButton("Open");
     Brick_ElementId fileSave_ButtonId = Brick_CreateLabelButton("Save");
     Brick_ElementId fileExport_ButtonId = Brick_CreateLabelButton("Export");
     Brick_ElementId fileQuit_ButtonId = Brick_CreateLabelButton("Quit");
-
+    // file menu button group (avoids calling layout on every single one)
     Brick_ElementId fileMenuGroup[4] = { fileOpen_ButtonId, fileSave_ButtonId, fileExport_ButtonId, fileQuit_ButtonId };
     Brick_ElementId fileMenu_ButtonGroupId = Brick_CreateButtonGroup(fileMenuGroup, 4);
 
-
+    // continue defining all the buttons:
+    // edit menu
     Brick_ElementId edit_ButtonId = Brick_CreateLabelButton("Edit");
     Brick_ElementId editCopy_ButtonId = Brick_CreateLabelButton("Copy");
     Brick_ElementId editPaste_ButtonId = Brick_CreateLabelButton("Paste");
     Brick_ElementId editProject_ButtonId = Brick_CreateLabelButton("Project");
     Brick_ElementId editSettings_ButtonId = Brick_CreateLabelButton("Settings");
-
+    // edit menu button group
     Brick_ElementId editMenuGroup[4] = { editCopy_ButtonId, editPaste_ButtonId, editProject_ButtonId, editSettings_ButtonId };
     Brick_ElementId editMenu_ButtonGroupId = Brick_CreateButtonGroup(editMenuGroup, 4);
 
-
+    // page menu
     Brick_ElementId page_ButtonId = Brick_CreateLabelButton("Page");
     Brick_ElementId pageResize_ButtonId = Brick_CreateLabelButton("Resize");
     Brick_ElementId pageCrop_ButtonId = Brick_CreateLabelButton("Crop");
     Brick_ElementId pageLayer_ButtonId = Brick_CreateLabelButton("Layer");
-
+    // etc
     Brick_ElementId pageMenuGroup[3] = { pageResize_ButtonId, pageCrop_ButtonId, pageLayer_ButtonId };
     Brick_ElementId pageMenu_ButtonGroupId = Brick_CreateButtonGroup(pageMenuGroup, 3);
 
-
+    // view menu
     Brick_ElementId view_ButtonId = Brick_CreateLabelButton("View");
     Brick_ElementId viewShowSidebar_ButtonId = Brick_CreateLabelButton("Show Sidebar");
     Brick_ElementId viewHideSidebar_ButtonId = Brick_CreateLabelButton("Hide Sidebar");
     Brick_ElementId viewColorTheme_ButtonId = Brick_CreateLabelButton("Color Theme");
-
     Brick_ElementId viewMenuGroup[3] = { viewShowSidebar_ButtonId, viewHideSidebar_ButtonId, viewColorTheme_ButtonId };
     Brick_ElementId viewMenu_ButtonGroupId = Brick_CreateButtonGroup(viewMenuGroup, 3);
 
-
+    // tool menu
     Brick_ElementId tool_ButtonId = Brick_CreateLabelButton("Tool");
     Brick_ElementId toolExtensions_ButtonId = Brick_CreateLabelButton("Extensions");
     Brick_ElementId toolTransform_ButtonId = Brick_CreateLabelButton("Transform");
     Brick_ElementId toolFilters_ButtonId = Brick_CreateLabelButton("Filters");
-
     Brick_ElementId toolMenuGroup[3] = { toolExtensions_ButtonId, toolTransform_ButtonId, toolFilters_ButtonId };
     Brick_ElementId toolMenu_ButtonGroupId = Brick_CreateButtonGroup(toolMenuGroup, 3);
 
-
+    // help menu
     Brick_ElementId help_ButtonId = Brick_CreateLabelButton("Help");
     Brick_ElementId helpAbout_ButtonId = Brick_CreateLabelButton("About");
-
     Brick_ElementId helpMenuGroup[1] = { helpAbout_ButtonId };
     Brick_ElementId helpMenu_ButtonGroupId = Brick_CreateButtonGroup(helpMenuGroup, 1);
 
-
+    // finally all of the menu buttons themselves in one button group
     Brick_ElementId topMenuGroup[6] = { file_ButtonId, edit_ButtonId, page_ButtonId, view_ButtonId, tool_ButtonId, help_ButtonId };
     Brick_ElementId topMenu_ButtonGroupId = Brick_CreateButtonGroup(topMenuGroup, 6);
+
+    // and for the UI state, a variable for the menu button, and the menu button group
+    // to track which menu button was pressed and then set the menu group accordingly.
+    Brick_ElementId currentMenuId = (Brick_ElementId){0, 0};
+    Brick_ElementId currentMenuGroupId = (Brick_ElementId){0, 0};
 
     while(!WindowShouldClose()) {
         // Use Brick_Resize with window dimensions for esponsive element and container sizes
@@ -111,21 +117,44 @@ int main(void) {
             .pressed = isPressed, 
             .released = isReleased
         };
-        // Update events with pointer data and delta time
-        Brick_UpdateEvents(pointerData, GetFrameTime());
 
-        // TODO: add the element id to the even for this to work and not have to do giant if_else in layout
-        // Brick_EventArray eventArray = Brick_UpdateEvents(pointerData, GetFrameTime());
+        // Update events with pointer data and delta time and save event array
+        Brick_EventArray eventArray = Brick_UpdateEvents(pointerData, GetFrameTime());
 
-        // Brick_ElementId currentMenuId = (Brick_ElementId){0, 0};
-        // for (int i=0; i<eventArray.length; i++) {
-        //     Brick_Event* event = Brick_EventArray_Get(&eventArray, i);
+        // iterate over the events to check which menu was pressed
+        // and save the button element id as well as the button group element id
+        // so we can render the menu in the layout section. As described in the layout
+        // comment section, there are multiple ways of achieving this. This way is less
+        // repetitive but requires handling events.
+        for (int i=0; i<eventArray.length; i++) {
+            Brick_Event* event = Brick_EventArray_Get(&eventArray, i);
 
-        //     if (event.eventType == BRICK_EVENT_TYPE_PRESS) {
-        //         currentMenuId = event.elementId;
-        //     }
+            // for this example just handle press events
+            if (event->type == BRICK_EVENT_TYPE_PRESS) {
+                // set the current menu to the pressed event element id
+                currentMenuId = event->elementId;
 
-        // }
+                // check to see which of the menu buttons was pressed
+                // and set the current menu group to that group defined at that top
+                if (BRICK_ELEMENT_ID_EQUALS(currentMenuId, file_ButtonId)) {
+                    currentMenuGroupId = fileMenu_ButtonGroupId;
+                } else if (BRICK_ELEMENT_ID_EQUALS(currentMenuId, edit_ButtonId)) {
+                    currentMenuGroupId = editMenu_ButtonGroupId;
+                } else if (BRICK_ELEMENT_ID_EQUALS(currentMenuId, page_ButtonId)) {
+                    currentMenuGroupId = pageMenu_ButtonGroupId;
+                } else if (BRICK_ELEMENT_ID_EQUALS(currentMenuId, view_ButtonId)) {
+                    currentMenuGroupId = viewMenu_ButtonGroupId;
+                } else if (BRICK_ELEMENT_ID_EQUALS(currentMenuId, tool_ButtonId)) {
+                    currentMenuGroupId = toolMenu_ButtonGroupId;
+                } else if (BRICK_ELEMENT_ID_EQUALS(currentMenuId, help_ButtonId)) {
+                    currentMenuGroupId = helpMenu_ButtonGroupId;
+                } else {
+                    currentMenuId = (Brick_ElementId){0, 0};
+                    currentMenuGroupId = (Brick_ElementId){0, 0};
+                }
+            }
+        }
+
         // Handle element events, either by saving the EventArray returned by UpdateEvents (not used now)
         // or using any of the event queries i.e. IsEventTriggeredById
         // Here we set the mouse cursor to the hand on button hover, for this specific button
@@ -152,43 +181,60 @@ int main(void) {
                 Brick_EndHorizontalStack();
                 Brick_EndWrapper();
 
-                if (Brick_IsButtonToggled(file_ButtonId)) {
-                    Brick_BeginDropdown(file_ButtonId);
+                // render the context menu if it is toggled
+                // check that the ID is not null (simple convention to close the dropdown)
+                if (BRICK_ELEMENT_ID_NOT_NULL(currentMenuId) && Brick_IsButtonToggled(currentMenuId)) {
+                    // the dropdown container for the menu
+                    Brick_BeginDropdown(currentMenuId);
+                    // the vertical stack of menu options in the dropdown
                     Brick_BeginVerticalStack();
-                        Brick_LayoutButtonGroup(fileMenu_ButtonGroupId);
-                    Brick_EndVerticalStack();
-                    Brick_EndDropdown();
-                } else if (Brick_IsButtonToggled(edit_ButtonId)) {
-                    Brick_BeginDropdown(edit_ButtonId);
-                    Brick_BeginVerticalStack();
-                        Brick_LayoutButtonGroup(editMenu_ButtonGroupId);
-                    Brick_EndVerticalStack();
-                    Brick_EndDropdown();
-                } else if (Brick_IsButtonToggled(page_ButtonId)) {
-                    Brick_BeginDropdown(page_ButtonId);
-                    Brick_BeginVerticalStack();
-                        Brick_LayoutButtonGroup(pageMenu_ButtonGroupId);
-                    Brick_EndVerticalStack();
-                    Brick_EndDropdown();
-                } else if (Brick_IsButtonToggled(view_ButtonId)) {
-                    Brick_BeginDropdown(view_ButtonId);
-                    Brick_BeginVerticalStack();
-                        Brick_LayoutButtonGroup(viewMenu_ButtonGroupId);
-                    Brick_EndVerticalStack();
-                    Brick_EndDropdown();
-                } else if (Brick_IsButtonToggled(tool_ButtonId)) {
-                    Brick_BeginDropdown(tool_ButtonId);
-                    Brick_BeginVerticalStack();
-                        Brick_LayoutButtonGroup(toolMenu_ButtonGroupId);
-                    Brick_EndVerticalStack();
-                    Brick_EndDropdown();
-                } else if (Brick_IsButtonToggled(help_ButtonId)) {
-                    Brick_BeginDropdown(help_ButtonId);
-                    Brick_BeginVerticalStack();
-                        Brick_LayoutButtonGroup(helpMenu_ButtonGroupId);
+                        // all the buttons in the menu group
+                        Brick_LayoutButtonGroup(currentMenuGroupId);
                     Brick_EndVerticalStack();
                     Brick_EndDropdown();
                 }
+
+                // Alternatively, this can be rendered without handling events
+                // by using the button element id and the button group element ids
+                // directly. This is more verbose but no event handling is required.
+
+                // if (Brick_IsButtonToggled(file_ButtonId)) {
+                //     Brick_BeginDropdown(file_ButtonId);
+                //     Brick_BeginVerticalStack();
+                //         Brick_LayoutButtonGroup(fileMenu_ButtonGroupId);
+                //     Brick_EndVerticalStack();
+                //     Brick_EndDropdown();
+                // } else if (Brick_IsButtonToggled(edit_ButtonId)) {
+                //     Brick_BeginDropdown(edit_ButtonId);
+                //     Brick_BeginVerticalStack();
+                //         Brick_LayoutButtonGroup(editMenu_ButtonGroupId);
+                //     Brick_EndVerticalStack();
+                //     Brick_EndDropdown();
+                // } else if (Brick_IsButtonToggled(page_ButtonId)) {
+                //     Brick_BeginDropdown(page_ButtonId);
+                //     Brick_BeginVerticalStack();
+                //         Brick_LayoutButtonGroup(pageMenu_ButtonGroupId);
+                //     Brick_EndVerticalStack();
+                //     Brick_EndDropdown();
+                // } else if (Brick_IsButtonToggled(view_ButtonId)) {
+                //     Brick_BeginDropdown(view_ButtonId);
+                //     Brick_BeginVerticalStack();
+                //         Brick_LayoutButtonGroup(viewMenu_ButtonGroupId);
+                //     Brick_EndVerticalStack();
+                //     Brick_EndDropdown();
+                // } else if (Brick_IsButtonToggled(tool_ButtonId)) {
+                //     Brick_BeginDropdown(tool_ButtonId);
+                //     Brick_BeginVerticalStack();
+                //         Brick_LayoutButtonGroup(toolMenu_ButtonGroupId);
+                //     Brick_EndVerticalStack();
+                //     Brick_EndDropdown();
+                // } else if (Brick_IsButtonToggled(help_ButtonId)) {
+                //     Brick_BeginDropdown(help_ButtonId);
+                //     Brick_BeginVerticalStack();
+                //         Brick_LayoutButtonGroup(helpMenu_ButtonGroupId);
+                //     Brick_EndVerticalStack();
+                //     Brick_EndDropdown();
+                // }
             // Always close containers
             Brick_EndFloatingPanel();
         // Close the main layout and save Clay RenderCommands to pass unto the Clay renderer.
