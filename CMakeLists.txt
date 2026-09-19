@@ -189,6 +189,7 @@ if(BRICK_BUILD_EXAMPLES)
     # --- Always builds: no renderer, just exercises Brick's API headlessly --
     add_subdirectory(examples/raylib-simple)
     add_subdirectory(examples/raylib-context-menus)
+    add_subdirectory(examples/raylib-website)
 
     # --- OpenGL renderer (Clay's) -------------------------------------------
     # find_package(OpenGL QUIET)
