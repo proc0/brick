@@ -34,7 +34,7 @@ int main(void) {
 
     // Create Brick elements and save their Ids to be used with the same element's
     // Layout<element> function. Here we create a button and save its ID.
-    Brick_ElementId helloWorld_ButtonId = Brick_CreateButton("BRICK");
+    Brick_ComponentId helloWorld_ButtonId = Brick_CreateButton("BRICK");
 
     while(!WindowShouldClose()) {
         // Use Brick_Resize with window dimensions for esponsive element and container sizes
