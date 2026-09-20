@@ -203,10 +203,7 @@ typedef struct {
     bool released;
 } Brick_PointerData;
 
-// Elements are the basic building blocks. Groups are made up of elements, 
-// and are also elements. Types with prefix, i.e. LABEL_BUTTON, are subtypes.
-// Subtypes reuse some or all of the parent type's functions,
-// and the parent type functions can take a subtype, but not the other way.
+// Elements are the basic building blocks 
 typedef CLAY_PACKED_ENUM {
     BRICK_ELEMENT_TYPE_NONE,
     BRICK_ELEMENT_TYPE_TEXT,
@@ -225,9 +222,30 @@ typedef struct Brick_ElementId {
 #define BRICK_ELEMENT_ID_EQUALS(idA, idB) (idA.index == idB.index && idA.type == idB.type)
 #define BRICK_ELEMENT_ID_NOT_NULL(id) (id.index > 0 && id.index < BRICK_MAX_ELEMENTS && id.type > 0)
 
+// Components include Brick elements and map to Clay elements
+// Components also trigger events
+typedef CLAY_PACKED_ENUM {
+    BRICK_COMPONENT_TYPE_NONE,
+    BRICK_COMPONENT_TYPE_LABEL,
+    BRICK_COMPONENT_TYPE_BUTTON,
+    BRICK_COMPONENT_TYPE_GROUP,
+} Brick_ComponentType;
+
+typedef CLAY_PACKED_ENUM {
+    BRICK_COMPONENT_SUBTYPE_NONE,
+    BRICK_COMPONENT_SUBTYPE_LABEL,
+    BRICK_COMPONENT_SUBTYPE_TOGGLE,
+} Brick_ComponentSubType;
+
+typedef struct Brick_ComponentId {
+    int32_t index;
+    Brick_ComponentType type;
+    Brick_ComponentSubType subType;
+} Brick_ComponentId;
+
 // Events
 // _____________________________________________________________________________
-// Events are triggered by elements and have two kinds of duration. They can last
+// Events are triggered by components and have two kinds of duration. They can last
 // a single frame, or multiple frames. Single frame events usually signal
 // when something started or ended, while multi-frame events signal something is
 // currently happening.
@@ -287,6 +305,20 @@ typedef struct Brick_Text {
     int32_t fontSize;
 } Brick_Text;
 
+typedef struct {
+    Brick_ElementId id;
+    void* imageData;
+    // Brick_Interaction action;
+    float width;
+    float height;
+} Brick_Image;
+
+// Components
+// _____________________________________________________________________________
+// There are two broad categories of elements, interactable and non-interactable.
+// Elements like Button or Image are interactable, triggering events.
+// Non-interactable elements like Text do not trigger any events.
+
 typedef struct Brick_Interaction {
     bool hovered;
     bool cleared;
@@ -300,24 +332,9 @@ typedef struct {
     Clay_ElementId clayId;
     Clay_String label;
     Brick_ElementId id;
-    // TODO: remove if there is no imageBUtton type
-    void* imageData;
     Brick_Interaction action;
     int32_t groupIndex;
-    float width;
-    float height;
-    // TODO: save font size and other styles here?
-    // or remove
-    int32_t fontSize;
 } Brick_Button;
-
-typedef struct {
-    Brick_ElementId id;
-    void* imageData;
-    Brick_Interaction action;
-    float width;
-    float height;
-} Brick_Image;
 
 typedef struct {
     int32_t length;
@@ -327,9 +344,11 @@ typedef struct {
 // Containers
 // _____________________________________________________________________________
 // Containers have an embedded scope struct style, with Begin and End prefixes
-// on its layout functions. There are two categories of containers:
+// for its layout functions. There are two categories of containers:
+//
 // Stateful containers: require calling its Brick_Create<Container> initializer,
 // and then passing the ID returned by it to the opening Brick_Begin<Container>.
+//
 // Stateless containers: Do not need creation or saving IDs, and any parameters
 // taken by the Begin tag are for frame-time configuration of the layout.
 
@@ -667,10 +686,12 @@ Brick_Interaction* Brick_Interaction_Get(Brick_ElementId buttonId) {
     if (buttonId.type == BRICK_ELEMENT_TYPE_BUTTON || buttonId.type == BRICK_ELEMENT_TYPE_TOGGLE_BUTTON || buttonId.type == BRICK_ELEMENT_TYPE_LABEL_BUTTON) {
         Brick_Button* button = Brick_Button_IndexGet(buttonId.index);
         return &button->action;
-    } else if (buttonId.type == BRICK_ELEMENT_TYPE_IMAGE) {
-        Brick_Image* button = Brick_Image_IndexGet(buttonId.index);
-        return &button->action;
-    }
+    } 
+
+    // else if (buttonId.type == BRICK_ELEMENT_TYPE_IMAGE) {
+    //     Brick_Image* button = Brick_Image_IndexGet(buttonId.index);
+    //     return &button->action;
+    // }
 
     return buttonState;
 }
@@ -899,68 +920,68 @@ Brick_EventArray Brick_UpdateEvents(Brick_PointerData pointerData, float deltaTi
     }
 
     // Image Events ------------------------------------
-    for (int32_t i = 1; i < g_brick_elements.images.length; i++) {
-        Brick_Image* button = Brick_Image_IndexGet(i);
-        Brick_Interaction* action = &button->action;
+    // for (int32_t i = 1; i < g_brick_elements.images.length; i++) {
+    //     Brick_Image* button = Brick_Image_IndexGet(i);
+    //     Brick_Interaction* action = &button->action;
 
-        if(action->clicked && !action->pressed) {
-            // prevents event from firing after button is
-            // not rendered, i.e. clicking to change panels
-            action->clicked = false;
-            g_brick_events[events.length] = PLEX(Brick_Event){
-                .elementId = button->id,
-                .index = i,
-                .type = BRICK_EVENT_TYPE_PRESS
-            };
-            events.length++;
+    //     if(action->clicked && !action->pressed) {
+    //         // prevents event from firing after button is
+    //         // not rendered, i.e. clicking to change panels
+    //         action->clicked = false;
+    //         g_brick_events[events.length] = PLEX(Brick_Event){
+    //             .elementId = button->id,
+    //             .index = i,
+    //             .type = BRICK_EVENT_TYPE_PRESS
+    //         };
+    //         events.length++;
 
-            g_brick_events_snapshot[BRICK_EVENT_TYPE_PRESS] = true;
-        } 
-        else if (action->pressed) { 
-            g_brick_events[events.length] = PLEX(Brick_Event){
-                .elementId = button->id,
-                .index = i,
-                .type = BRICK_EVENT_TYPE_PRESSING
-            };
-            events.length++;
+    //         g_brick_events_snapshot[BRICK_EVENT_TYPE_PRESS] = true;
+    //     } 
+    //     else if (action->pressed) { 
+    //         g_brick_events[events.length] = PLEX(Brick_Event){
+    //             .elementId = button->id,
+    //             .index = i,
+    //             .type = BRICK_EVENT_TYPE_PRESSING
+    //         };
+    //         events.length++;
 
-            g_brick_events_snapshot[BRICK_EVENT_TYPE_PRESSING] = true;
-        }
-        else if(action->released) {
-            // prevents from firing after button is
-            // blocked or not rendered, i.e. showing a popup window
-            action->released = false;
-            g_brick_events[events.length] = PLEX(Brick_Event){
-                .elementId = button->id,
-                .index = i,
-                .type = BRICK_EVENT_TYPE_RELEASE
-            };
-            events.length++;
+    //         g_brick_events_snapshot[BRICK_EVENT_TYPE_PRESSING] = true;
+    //     }
+    //     else if(action->released) {
+    //         // prevents from firing after button is
+    //         // blocked or not rendered, i.e. showing a popup window
+    //         action->released = false;
+    //         g_brick_events[events.length] = PLEX(Brick_Event){
+    //             .elementId = button->id,
+    //             .index = i,
+    //             .type = BRICK_EVENT_TYPE_RELEASE
+    //         };
+    //         events.length++;
 
-            g_brick_events_snapshot[BRICK_EVENT_TYPE_RELEASE] = true;
-        }
-        else if(action->hovered) {
-            Brick_EventType eventType = Brick_PointerJustHovered() ? BRICK_EVENT_TYPE_HOVER : BRICK_EVENT_TYPE_HOVERING;
-            g_brick_events[events.length] = PLEX(Brick_Event){
-                .elementId = button->id,
-                .index = i,
-                .type = eventType
-            };
-            events.length++;
+    //         g_brick_events_snapshot[BRICK_EVENT_TYPE_RELEASE] = true;
+    //     }
+    //     else if(action->hovered) {
+    //         Brick_EventType eventType = Brick_PointerJustHovered() ? BRICK_EVENT_TYPE_HOVER : BRICK_EVENT_TYPE_HOVERING;
+    //         g_brick_events[events.length] = PLEX(Brick_Event){
+    //             .elementId = button->id,
+    //             .index = i,
+    //             .type = eventType
+    //         };
+    //         events.length++;
 
-            g_brick_events_snapshot[eventType] = true;
-        }
-        else if(action->cleared) {
-            g_brick_events[events.length] = PLEX(Brick_Event){
-                .elementId = button->id,
-                .index = i,
-                .type = BRICK_EVENT_TYPE_CLEAR
-            };
-            events.length++;
+    //         g_brick_events_snapshot[eventType] = true;
+    //     }
+    //     else if(action->cleared) {
+    //         g_brick_events[events.length] = PLEX(Brick_Event){
+    //             .elementId = button->id,
+    //             .index = i,
+    //             .type = BRICK_EVENT_TYPE_CLEAR
+    //         };
+    //         events.length++;
 
-            g_brick_events_snapshot[BRICK_EVENT_TYPE_CLEAR] = true;
-        }
-    }
+    //         g_brick_events_snapshot[BRICK_EVENT_TYPE_CLEAR] = true;
+    //     }
+    // }
 
     // ScrollBox Events ------------------------------------
     // update Clay scroll containers once for all scrollboxes
@@ -1154,12 +1175,8 @@ Brick_ElementId Brick_CreateButton(const char* label) {
         .clayId = CLAY_SID(clayString),
         .label = clayString,
         .id = buttonId,
-        .imageData = NULL,
         .action = Brick_Interaction_DEFAULT,
         .groupIndex = 0,
-        .width = 0,
-        .height = 0,
-        .fontSize = 0,
     };
 
     g_brick_elements.buttons.data[index] = new_button;
@@ -1381,7 +1398,7 @@ Brick_ElementId Brick_CreateImage(float width, float height, void* imageData) {
     Brick_Image new_button = {
         .id = buttonId,
         .imageData = imageData,
-        .action = Brick_Interaction_DEFAULT,
+        // .action = Brick_Interaction_DEFAULT,
         .width = width,
         .height = height,
     };
@@ -1430,18 +1447,20 @@ void Brick__LayoutImageIndex(int32_t index) {
             },
         },
         .image = { .imageData = image->imageData }
-    }) {
-        Brick_OnHoverInteraction(&image->action, image->id.index, Clay_Hovered());
-        // Clay_OnHover also handles click events
-        Clay_OnHover(Brick_HandleClayHoverAction, &image->action);
-    }
+    }) {}
+
+    // {
+    //     Brick_OnHoverInteraction(&image->action, image->id.index, Clay_Hovered());
+    //     // Clay_OnHover also handles click events
+    //     Clay_OnHover(Brick_HandleClayHoverAction, &image->action);
+    // }
 }
 
-void Brick_LayoutImage(Brick_ElementId buttonId) {
+void Brick_LayoutImage(Brick_ElementId id) {
     // TODO: add error handling
-    if (buttonId.type != BRICK_ELEMENT_TYPE_IMAGE) return;
+    if (id.type != BRICK_ELEMENT_TYPE_IMAGE) return;
 
-    Brick__LayoutImageIndex(buttonId.index);
+    Brick__LayoutImageIndex(id.index);
 }
 
 // Button Group
