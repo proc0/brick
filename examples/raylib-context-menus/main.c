@@ -44,7 +44,7 @@ int main(void) {
     Brick_ComponentId fileQuit_ButtonId = Brick_CreateLabelButton("Quit");
     // file menu button group (avoids calling layout on every single one)
     Brick_ComponentId fileMenuGroup[4] = { fileOpen_ButtonId, fileSave_ButtonId, fileExport_ButtonId, fileQuit_ButtonId };
-    Brick_ComponentId fileMenu_ButtonGroupId = Brick_CreateGroup(fileMenuGroup, 4);
+    Brick_ComponentId fileMenu_ButtonGroupId = Brick_CreateToggleGroup(fileMenuGroup, 4);
 
     // continue defining all the buttons:
     // edit menu
@@ -55,7 +55,7 @@ int main(void) {
     Brick_ComponentId editSettings_ButtonId = Brick_CreateLabelButton("Settings");
     // edit menu button group
     Brick_ComponentId editMenuGroup[4] = { editCopy_ButtonId, editPaste_ButtonId, editProject_ButtonId, editSettings_ButtonId };
-    Brick_ComponentId editMenu_ButtonGroupId = Brick_CreateGroup(editMenuGroup, 4);
+    Brick_ComponentId editMenu_ButtonGroupId = Brick_CreateToggleGroup(editMenuGroup, 4);
 
     // page menu
     Brick_ComponentId page_ButtonId = Brick_CreateLabelButton("Page");
@@ -64,7 +64,7 @@ int main(void) {
     Brick_ComponentId pageLayer_ButtonId = Brick_CreateLabelButton("Layer");
     // etc
     Brick_ComponentId pageMenuGroup[3] = { pageResize_ButtonId, pageCrop_ButtonId, pageLayer_ButtonId };
-    Brick_ComponentId pageMenu_ButtonGroupId = Brick_CreateGroup(pageMenuGroup, 3);
+    Brick_ComponentId pageMenu_ButtonGroupId = Brick_CreateToggleGroup(pageMenuGroup, 3);
 
     // view menu
     Brick_ComponentId view_ButtonId = Brick_CreateLabelButton("View");
@@ -72,7 +72,7 @@ int main(void) {
     Brick_ComponentId viewHideSidebar_ButtonId = Brick_CreateLabelButton("Hide Sidebar");
     Brick_ComponentId viewColorTheme_ButtonId = Brick_CreateLabelButton("Color Theme");
     Brick_ComponentId viewMenuGroup[3] = { viewShowSidebar_ButtonId, viewHideSidebar_ButtonId, viewColorTheme_ButtonId };
-    Brick_ComponentId viewMenu_ButtonGroupId = Brick_CreateGroup(viewMenuGroup, 3);
+    Brick_ComponentId viewMenu_ButtonGroupId = Brick_CreateToggleGroup(viewMenuGroup, 3);
 
     // tool menu
     Brick_ComponentId tool_ButtonId = Brick_CreateLabelButton("Tool");
@@ -80,17 +80,17 @@ int main(void) {
     Brick_ComponentId toolTransform_ButtonId = Brick_CreateLabelButton("Transform");
     Brick_ComponentId toolFilters_ButtonId = Brick_CreateLabelButton("Filters");
     Brick_ComponentId toolMenuGroup[3] = { toolExtensions_ButtonId, toolTransform_ButtonId, toolFilters_ButtonId };
-    Brick_ComponentId toolMenu_ButtonGroupId = Brick_CreateGroup(toolMenuGroup, 3);
+    Brick_ComponentId toolMenu_ButtonGroupId = Brick_CreateToggleGroup(toolMenuGroup, 3);
 
     // help menu
     Brick_ComponentId help_ButtonId = Brick_CreateLabelButton("Help");
     Brick_ComponentId helpAbout_ButtonId = Brick_CreateLabelButton("About");
     Brick_ComponentId helpMenuGroup[1] = { helpAbout_ButtonId };
-    Brick_ComponentId helpMenu_ButtonGroupId = Brick_CreateGroup(helpMenuGroup, 1);
+    Brick_ComponentId helpMenu_ButtonGroupId = Brick_CreateToggleGroup(helpMenuGroup, 1);
 
     // finally all of the menu buttons themselves in one button group
     Brick_ComponentId topMenuGroup[6] = { file_ButtonId, edit_ButtonId, page_ButtonId, view_ButtonId, tool_ButtonId, help_ButtonId };
-    Brick_ComponentId topMenu_ButtonGroupId = Brick_CreateGroup(topMenuGroup, 6);
+    Brick_ComponentId topMenu_ButtonGroupId = Brick_CreateToggleGroup(topMenuGroup, 6);
 
     // and for the UI state, a variable for the menu button, and the menu button group
     // to track which menu button was pressed and then set the menu group accordingly.
