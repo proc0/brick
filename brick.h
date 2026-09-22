@@ -488,10 +488,10 @@ Brick_ComponentId Brick_CreateButton(const char* label);
 // TODO: implement
 // Brick_ComponentId Brick_CreateButtonEx(const char* label, int32_t width, int32_t height, int32_t fontSize, void* imageData);
 Brick_ComponentId Brick_CreateLabelButton(const char* label);
-Brick_ComponentId Brick_CreateToggleButton(const char* label);
+Brick_ComponentId Brick_CreateImageButton(float width, float height, void* imageData);
 void Brick_LayoutButton(Brick_ComponentId buttonId);
 void Brick_LayoutLabelButton(Brick_ComponentId buttonId);
-void Brick_LayoutToggleButton(Brick_ComponentId buttonId);
+void Brick_LayoutImageButton(Brick_ComponentId buttonId);
 
 // Button Group
 Brick_ComponentId Brick_CreateGroup(const Brick_ComponentId* componentIds, int32_t groupSize);
@@ -753,19 +753,14 @@ Brick_Button* Brick_Button_Get(Brick_ComponentId buttonId) {
     return Brick_Button_IndexGet(buttonId.index);
 }
 
+// For now only Buttons have interactions aka actions
 Brick_Interaction* Brick_Interaction_Get(Brick_ComponentId buttonId) {
     Brick_Interaction* buttonState = &Brick_Interaction_DEFAULT;
     
-    // TODO: add element subType and check against that
     if (buttonId.type == BRICK_COMPONENT_TYPE_BUTTON) {
         Brick_Button* button = Brick_Button_IndexGet(buttonId.index);
         return &button->action;
     } 
-
-    // else if (buttonId.type == BRICK_ELEMENT_TYPE_IMAGE) {
-    //     Brick_Image* button = Brick_Image_IndexGet(buttonId.index);
-    //     return &button->action;
-    // }
 
     return buttonState;
 }
@@ -1271,12 +1266,6 @@ void Brick__LayoutImageIndex(int32_t index) {
         },
         .image = { .imageData = image->imageData }
     }) {}
-
-    // {
-    //     Brick_OnHoverInteraction(&image->action, image->id.index, Clay_Hovered());
-    //     // Clay_OnHover also handles click events
-    //     Clay_OnHover(Brick_HandleClayHoverAction, &image->action);
-    // }
 }
 
 void Brick_LayoutImage(Brick_ElementId id) {
@@ -1510,18 +1499,19 @@ Brick_ComponentId Brick_CreateLabelButton(const char* label) {
 }
 
 //TODO: review if TOggleButton is needed after ToggleGroup added
-Brick_ComponentId Brick_CreateToggleButton(const char* label) {
-    Brick_ComponentId buttonId = Brick_CreateButton(label);
+Brick_ComponentId Brick_CreateImageButton(float width, float height, void* imageData) {
+    // Brick_ComponentId buttonId = Brick_CreateButton(label);
 
-    // TODO: error handling
-    if (buttonId.type == BRICK_COMPONENT_TYPE_NONE) return buttonId;
+    // // TODO: error handling
+    // if (buttonId.type == BRICK_COMPONENT_TYPE_NONE) return buttonId;
 
-    Brick_Button* button = Brick_Button_IndexGet(buttonId.index);
+    // Brick_Button* button = Brick_Button_IndexGet(buttonId.index);
 
-    Brick_ComponentId toggleButtonId = PLEX(Brick_ComponentId){ buttonId.index, BRICK_COMPONENT_TYPE_BUTTON, BRICK_COMPONENT_SUBTYPE_TOGGLE };
-    button->id = toggleButtonId;
+    // Brick_ComponentId toggleButtonId = PLEX(Brick_ComponentId){ buttonId.index, BRICK_COMPONENT_TYPE_BUTTON, BRICK_COMPONENT_SUBTYPE_TOGGLE };
+    // button->id = toggleButtonId;
     
-    return toggleButtonId;
+    // return toggleButtonId;
+    return Brick_ComponentId_DEFAULT;
 }
 
 // Button handlers
@@ -1643,10 +1633,10 @@ void Brick_LayoutButton(Brick_ComponentId buttonId) {
     Brick__LayoutButtonIndex(buttonId.index);
 }
 
-void Brick_LayoutToggleButton(Brick_ComponentId buttonId) {
+void Brick_LayoutImageButton(Brick_ComponentId buttonId) {
     // TODO: add error handling
     // TODO: add element subtype and check that instead
-    if (buttonId.subType != BRICK_COMPONENT_SUBTYPE_TOGGLE) return;
+    if (buttonId.subType != BRICK_COMPONENT_SUBTYPE_IMAGE) return;
 
     Brick__LayoutButtonIndex(buttonId.index);
 }
@@ -1745,13 +1735,18 @@ Brick_ComponentId Brick_CreateToggleGroup(const Brick_ComponentId* componentIds,
 
     Brick_Group* group = Brick_Group_IndexGet(groupId.index);
 
+    for (int32_t i = 0; i < group->length; i++) {
+        Brick_Button* button = Brick_Button_IndexGet(group->indexes[i]);
+
+        button->id.subType = BRICK_COMPONENT_SUBTYPE_TOGGLE;
+
+        if (i == 0) {
+            button->action.toggled = true;
+        }
+    }
+
     Brick_ComponentId toggleGroupId = PLEX(Brick_ComponentId){ groupId.index, BRICK_COMPONENT_TYPE_GROUP, BRICK_COMPONENT_SUBTYPE_TOGGLE };
     group->id = toggleGroupId;
-
-    if (componentIds[0].type == BRICK_COMPONENT_TYPE_BUTTON) {
-        Brick_Button* button = Brick_Button_IndexGet(componentIds[0].index);
-        button->action.toggled = true;
-    }
 
     return toggleGroupId;
 }
