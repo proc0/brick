@@ -79,7 +79,7 @@ int main(void) {
             // A floating panel at the center of the screen
             Brick_BeginPanel();
                 // inline text for the title
-                Brick_InlineText("Brick");
+                Brick_InlineTextEx("Brick", 0, 48);
                 // the button that was created during init
 
             // Always close containers
