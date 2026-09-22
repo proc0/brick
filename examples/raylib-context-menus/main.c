@@ -177,7 +177,7 @@ int main(void) {
                 // the button that was created during init
                 Brick_BeginWrapper();
                 Brick_BeginHorizontalStack();
-                    Brick_LayoutGroup(topMenu_ButtonGroupId);
+                    Brick_LayoutToggleGroup(topMenu_ButtonGroupId);
                 Brick_EndHorizontalStack();
                 Brick_EndWrapper();
 
@@ -189,7 +189,7 @@ int main(void) {
                     // the vertical stack of menu options in the dropdown
                     Brick_BeginVerticalStack();
                         // all the buttons in the menu group
-                        Brick_LayoutGroup(currentMenuGroupId);
+                        Brick_LayoutToggleGroup(currentMenuGroupId);
                     Brick_EndVerticalStack();
                     Brick_EndDropdown();
                 }
