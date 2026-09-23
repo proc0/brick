@@ -175,22 +175,20 @@ int main(void) {
             // A floating panel at the center of the screen
             Brick_BeginFloatingPanel();
                 // the button that was created during init
-                Brick_BeginWrapper();
-                Brick_BeginHorizontalStack();
+                Brick_BeginHorizontalBox();
                     Brick_LayoutToggleGroup(topMenu_ButtonGroupId);
-                Brick_EndHorizontalStack();
-                Brick_EndWrapper();
+                Brick_EndHorizontalBox();
 
                 // render the context menu if it is toggled
                 // check that the ID is not null (simple convention to close the dropdown)
                 if (BRICK_ID_NOT_NULL(currentMenuId) && Brick_IsButtonToggled(currentMenuId)) {
                     // the dropdown container for the menu
                     Brick_BeginDropdown(currentMenuId);
-                    // the vertical stack of menu options in the dropdown
-                    Brick_BeginVerticalStack();
+                    // the vertical Direction of menu options in the dropdown
+                    Brick_BeginVerticalDirection();
                         // all the buttons in the menu group
                         Brick_LayoutToggleGroup(currentMenuGroupId);
-                    Brick_EndVerticalStack();
+                    Brick_EndVerticalDirection();
                     Brick_EndDropdown();
                 }
 
