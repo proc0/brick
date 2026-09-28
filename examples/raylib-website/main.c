@@ -32,9 +32,33 @@ int main(void) {
     // graphics library being used, i.e. Raylib, and the array of fonts that were initialized above.
     Brick_Initialize(SCREEN_WIDTH, SCREEN_HEIGHT, Raylib_MeasureText, fonts);
 
-    // Create Brick elements and save their Ids to be used with the same element's
-    // Layout<element> function. Here we create a button and save its ID.
-    // Brick_ElementId helloWorld_ButtonId = Brick_CreateButton("BRICK");
+    // Elements and Components
+    Brick_ComponentId BrickTitle_LabelId = Brick_CreateLabelEx("BRICK", 0, 48);
+
+    Brick_ComponentId ElementText_TabId = Brick_CreateButton("Text");
+    Brick_ComponentId ElementImage_TabId = Brick_CreateButton("Image");
+
+    Brick_ComponentId ComponentLabel_TabId = Brick_CreateButton("Label");
+    Brick_ComponentId ComponentButton_TabId = Brick_CreateButton("Button");
+    Brick_ComponentId ComponentLabelButton_TabId = Brick_CreateButton("Label Button");
+    Brick_ComponentId ComponentImageButton_TabId = Brick_CreateButton("Image Button");
+    Brick_ComponentId ComponentLabelGroup_TabId = Brick_CreateButton("Label Group");
+    Brick_ComponentId ComponentButtonGroup_TabId = Brick_CreateButton("Button Group");
+
+    Brick_ComponentId ContainerScrollBox_TabId = Brick_CreateButton("ScrollBox");
+
+    Brick_ComponentId EntitiesTabIds[9] = { 
+        ElementText_TabId,
+        ElementImage_TabId,
+        ComponentLabel_TabId,
+        ComponentButton_TabId,
+        ComponentLabelButton_TabId,
+        ComponentImageButton_TabId,
+        ComponentLabelGroup_TabId,
+        ComponentButtonGroup_TabId,
+        ContainerScrollBox_TabId,
+    };
+    Brick_ComponentId Entities_TabGroupId = Brick_CreateToggleGroup(EntitiesTabIds, 9);
 
     while(!WindowShouldClose()) {
         // Use Brick_Resize with window dimensions for esponsive element and container sizes
@@ -62,13 +86,13 @@ int main(void) {
         // Handle element events, either by saving the EventArray returned by UpdateEvents (not used now)
         // or using any of the event queries i.e. IsEventTriggeredById
         // Here we set the mouse cursor to the hand on button hover, for this specific button
-        // if (Brick_IsEventTriggeredById(BRICK_EVENT_TYPE_HOVER, helloWorld_ButtonId)) {
-        //     SetMouseCursor(MOUSE_CURSOR_POINTING_HAND);
-        // }
-        // // The CLEAR event happens once when the HOVER ends
-        // if (Brick_IsEventTriggeredById(BRICK_EVENT_TYPE_CLEAR, helloWorld_ButtonId)) {
-        //     SetMouseCursor(MOUSE_CURSOR_DEFAULT);
-        // }
+        if (Brick_IsEventTriggered(BRICK_EVENT_TYPE_HOVER)) {
+            SetMouseCursor(MOUSE_CURSOR_POINTING_HAND);
+        }
+        // The CLEAR event happens once when the HOVER ends
+        if (Brick_IsEventTriggered(BRICK_EVENT_TYPE_CLEAR)) {
+            SetMouseCursor(MOUSE_CURSOR_DEFAULT);
+        }
         
         // Raylib begin frame
         BeginDrawing();
@@ -78,9 +102,13 @@ int main(void) {
         Brick_BeginLayout();
             // A floating panel at the center of the screen
             Brick_BeginPanel();
-                // inline text for the title
-                Brick_InlineTextEx("Brick", 0, 48);
-                // the button that was created during init
+                Brick_BeginVerticalBox();
+                    Brick_LayoutToggleGroup(Entities_TabGroupId);
+                Brick_EndVerticalBox();
+                
+                Brick_BeginHorizontalLayout();
+                    Brick_LayoutLabel(BrickTitle_LabelId);
+                Brick_EndHorizontalLayout();
 
             // Always close containers
             Brick_EndPanel();

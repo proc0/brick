@@ -594,13 +594,13 @@ void Brick_EndVerticalBox(void);
 // Horizontal Direction
 // A container that aligns its children horizontally
 // Left aligned by default
-void Brick_BeginHorizontalDirection(void);
-void Brick_EndHorizontalDirection(void);
+void Brick_BeginHorizontalLayout(void);
+void Brick_EndHorizontalLayout(void);
 
 // Vertical Direction
 // A container that aligns its children vertically
-void Brick_BeginVerticalDirection(void);
-void Brick_EndVerticalDirection(void);
+void Brick_BeginVerticalLayout(void);
+void Brick_EndVerticalLayout(void);
 
 // Position Relative
 void Brick_BeginPositionRelative(float x, float y);
@@ -2083,7 +2083,7 @@ void Brick_EndFloatingPanel(void) {
 // Horizontal Direction
 // _____________________________________________________________________________
 
-void Brick_BeginHorizontalDirection(void) {
+void Brick_BeginHorizontalLayout(void) {
     Clay__OpenElement();
     Clay__ConfigureOpenElement(PLEX(Clay_ElementDeclaration) {
         .layout = {
@@ -2098,14 +2098,14 @@ void Brick_BeginHorizontalDirection(void) {
     });
 }
 
-void Brick_EndHorizontalDirection(void) {
+void Brick_EndHorizontalLayout(void) {
     Clay__CloseElement();
 }
 
 // Vertical Direction
 // _____________________________________________________________________________
 
-void Brick_BeginVerticalDirection(void) {
+void Brick_BeginVerticalLayout(void) {
     Clay__OpenElement();
     Clay__ConfigureOpenElement(PLEX(Clay_ElementDeclaration) {
         .layout = {
@@ -2120,7 +2120,7 @@ void Brick_BeginVerticalDirection(void) {
     });
 }
 
-void Brick_EndVerticalDirection(void) {
+void Brick_EndVerticalLayout(void) {
     Clay__CloseElement();
 }
 

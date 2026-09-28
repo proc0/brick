@@ -185,10 +185,10 @@ int main(void) {
                     // the dropdown container for the menu
                     Brick_BeginDropdown(currentMenuId);
                     // the vertical Direction of menu options in the dropdown
-                    Brick_BeginVerticalDirection();
+                    Brick_BeginVerticalLayout();
                         // all the buttons in the menu group
                         Brick_LayoutToggleGroup(currentMenuGroupId);
-                    Brick_EndVerticalDirection();
+                    Brick_EndVerticalLayout();
                     Brick_EndDropdown();
                 }
 
