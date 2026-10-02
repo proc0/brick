@@ -1332,7 +1332,7 @@ void Brick_LayoutText(Brick_ElementId textId) {
 // Image
 // _____________________________________________________________________________
 
-Brick_ElementId Brick_CreateImage(float width, float height, void* imageData) {
+Brick_ElementId Brick_CreateImage(float width, float height, void* data) {
     int32_t index = g_brick_elements.images.length;
     // TODO: add error handling
     if (index >= BRICK_MAX_IMAGES || g_brick_elements.total_count >= BRICK_MAX_ELEMENTS) {
@@ -1346,8 +1346,7 @@ Brick_ElementId Brick_CreateImage(float width, float height, void* imageData) {
 
     Brick_Image new_image = {
         .id = imageId,
-        .imageData = imageData,
-        // .action = Brick_Interaction_DEFAULT,
+        .imageData = data,
         .width = width,
         .height = height,
     };

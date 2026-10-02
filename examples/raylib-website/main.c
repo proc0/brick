@@ -43,18 +43,33 @@ int main(void) {
 
     // Image
     Brick_ComponentId ElementImage_TabId = Brick_CreateButton("Image");
-    // Brick_ElementId ElementImage_ImageId = Brick_CreateImage();
 
+    Texture2D bricks = LoadTexture("resources/bricks.png");
+    Brick_ElementId ElementImage_ImageId = Brick_CreateImage(bricks.width, bricks.height, &bricks);
+
+    // Label
     Brick_ComponentId ComponentLabel_TabId = Brick_CreateButton("Label");
+    
     // Button
     Brick_ComponentId ComponentButton_TabId = Brick_CreateButton("Button");
+    
+    // Label Button
     Brick_ComponentId ComponentLabelButton_TabId = Brick_CreateButton("Label Button");
+    
+    // Image Button
     Brick_ComponentId ComponentImageButton_TabId = Brick_CreateButton("Image Button");
+    Brick_ComponentId ComponentImageButton_ButtonId = Brick_CreateImageButton(bricks.width, bricks.height, &bricks);
+
+    // Label Group
     Brick_ComponentId ComponentLabelGroup_TabId = Brick_CreateButton("Label Group");
+    
+    // Button Group
     Brick_ComponentId ComponentButtonGroup_TabId = Brick_CreateButton("Button Group");
 
+    // Scroll Box
     Brick_ComponentId ContainerScrollBox_TabId = Brick_CreateButton("ScrollBox");
 
+    // Sidebar tabs
     Brick_ComponentId EntitiesTabIds[9] = { 
         ElementText_TabId,
         ElementImage_TabId,
@@ -126,6 +141,7 @@ int main(void) {
                         } else if (Brick_IsButtonToggled(ElementImage_TabId)) {
                             Brick_InlineText("Image");
                             
+                            Brick_LayoutImage(ElementImage_ImageId);
                         } else if (Brick_IsButtonToggled(ComponentLabel_TabId)) {
                             Brick_InlineText("Label");
                             
@@ -138,6 +154,7 @@ int main(void) {
                         } else if (Brick_IsButtonToggled(ComponentImageButton_TabId)) {
                             Brick_InlineText("Image Button");
                             
+                            Brick_LayoutImageButton(ComponentImageButton_ButtonId);
                         } else if (Brick_IsButtonToggled(ComponentLabelGroup_TabId)) {
                             Brick_InlineText("Label Group");
                             
