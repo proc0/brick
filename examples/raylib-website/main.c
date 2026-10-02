@@ -32,13 +32,21 @@ int main(void) {
     // graphics library being used, i.e. Raylib, and the array of fonts that were initialized above.
     Brick_Initialize(SCREEN_WIDTH, SCREEN_HEIGHT, Raylib_MeasureText, fonts);
 
-    // Elements and Components
     Brick_ComponentId BrickTitle_LabelId = Brick_CreateLabelEx("BRICK", 0, 48);
+    
 
+    // Elements and Components
+
+    // Text
     Brick_ComponentId ElementText_TabId = Brick_CreateButton("Text");
+    Brick_ElementId ElementText_TextId = Brick_CreateText("Text");
+
+    // Image
     Brick_ComponentId ElementImage_TabId = Brick_CreateButton("Image");
+    // Brick_ElementId ElementImage_ImageId = Brick_CreateImage();
 
     Brick_ComponentId ComponentLabel_TabId = Brick_CreateButton("Label");
+    // Button
     Brick_ComponentId ComponentButton_TabId = Brick_CreateButton("Button");
     Brick_ComponentId ComponentLabelButton_TabId = Brick_CreateButton("Label Button");
     Brick_ComponentId ComponentImageButton_TabId = Brick_CreateButton("Image Button");
@@ -106,9 +114,42 @@ int main(void) {
                     Brick_LayoutToggleGroup(Entities_TabGroupId);
                 Brick_EndVerticalBox();
                 
-                Brick_BeginHorizontalLayout();
+                Brick_BeginVerticalLayout();
                     Brick_LayoutLabel(BrickTitle_LabelId);
-                Brick_EndHorizontalLayout();
+
+
+                    Brick_BeginPanel();
+                        if (Brick_IsButtonToggled(ElementText_TabId)) {
+                            Brick_InlineText("Text");
+
+                            Brick_LayoutText(ElementText_TextId);
+                        } else if (Brick_IsButtonToggled(ElementImage_TabId)) {
+                            Brick_InlineText("Image");
+                            
+                        } else if (Brick_IsButtonToggled(ComponentLabel_TabId)) {
+                            Brick_InlineText("Label");
+                            
+                        } else if (Brick_IsButtonToggled(ComponentButton_TabId)) {
+                            Brick_InlineText("Button");
+                            
+                        } else if (Brick_IsButtonToggled(ComponentLabelButton_TabId)) {
+                            Brick_InlineText("Label Button");
+                            
+                        } else if (Brick_IsButtonToggled(ComponentImageButton_TabId)) {
+                            Brick_InlineText("Image Button");
+                            
+                        } else if (Brick_IsButtonToggled(ComponentLabelGroup_TabId)) {
+                            Brick_InlineText("Label Group");
+                            
+                        } else if (Brick_IsButtonToggled(ComponentButtonGroup_TabId)) {
+                            Brick_InlineText("Button Group");
+                            
+                        } else if (Brick_IsButtonToggled(ContainerScrollBox_TabId)) {
+                            Brick_InlineText("ScrollBox");
+                            
+                        }
+                    Brick_EndPanel();
+                Brick_EndVerticalLayout();
 
             // Always close containers
             Brick_EndPanel();
