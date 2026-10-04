@@ -1,29 +1,33 @@
 # Brick
 ### Render-agnostic, header-only UI Component Library for Clay
 
-Brick is render agnostic UI component library extending the UI layout library [Clay](https://github.com/nicbarker/clay). Brick provides out-of-the-box components (elements and containers) for quick use and flexibility while retaining full performance and customization. Brick adds a very thin layer of state on top of Clay to keep track of components and their state, including an event system. 
+Brick is render agnostic UI component library extending the UI layout library [Clay](https://github.com/nicbarker/clay). Brick provides out-of-the-box components for quick and flexible use while retaining full performance and customization. Brick adds a very thin layer of state on top of Clay to keep track of components and their state, including an event system. 
 
 ## Features
 
-- Seamless interop and all the benefits of [Clay](https://github.com/nicbarker/clay)
-- Ergonomic library of UI component primitives and containers
-- Automatic UI state management
-- Flexible API for handling UI events
+- Library of UI elements, components, and containers
+- Interchangeability with [Clay](https://github.com/nicbarker/clay)
+- Basic UI state management
+- UI events with flexible handling
 - Seperation of content, layout, and styles
-- Reactive layouts adapt to screen size changes
-- Sensible defaults while still providing full customization options
-- Small STB style C99 header-only library, compatible with C++20
-- Render agnostic and fully customizable components and styles
+- Default and customizable styles
+- Small STB header-only library for C99, C++20 and above
+- Render agnostic
+
+Future versions tentative features:
+- Reactive layouts adapt to window resizing
+- Default renderers for multiple graphics libs
+- Unified style effects with shaders, i.e. drop shadows and gradients
 
 ## Contents
 
 #### [Quick Start](#)
 
-#### [Summary](#)
-
 #### [Objectives](#)
 
 #### [Setup](#)
+
+#### [Overview](#)
 
 #### [Examples](#)
 
@@ -33,21 +37,26 @@ Brick is render agnostic UI component library extending the UI layout library [C
 
 ## Quick Start
 
-## Summary
-<img src="docs/Brick_StackDiagram.drawio.png" />
+
 
 ## Objectives
 
-OBJ:
-1. add basic UI state, i.e. button hover or not, button is toggled, panel is visible or hidden
-2. separate content from layout, i.e. declar button and labels in one place, use them in the layout later
-3. uses 'embeded scope constructs' like Raylib to match this C style of API
-4. provide sensible defaults where possible, windows grow, have some padding, etc
-5. provide a global config that overrides defaults, change colors, adjust padding
-6. add responsive reactive behavior to the window, i.e. resize on event window resizing and adjust layout dynamically
-7. provide an easy way to localize, i.e. through Brick_TextEx or TextPro or a Brick_LocalizedText, that would stand in for normal strings and can be globally configured
+Clay is a versatile UI layout library that provides an inline-style interface for creating any type of UI element. The inline configuration of every element will add up quickly with relatively simple UIs taking thousands of lines of code. This also means the content (button labels, text, etc.) is in the same area as the styles, which is in the same place as the layout structure. Brick aims to add UI components as primitive building blocks that can be combined in many ways to build any UI, as well as separating content, styles, and layout, while retaining interoperability with Clay for maximum flexibility.
+
+Brick objectives include:
+- adding UI state on top of Clay
+- adding component events and a flexible way of handling them
+- separating content, layout, and styles
+- retaining ability to interchangeably use Clay alongside Brick
+- responsive styles that adjust to window resizing
+- global style configuration that can be overridden at different levels
+- quick setup and quick start with reasonable defaults
+- remaining render agnostic while providing default renderers and remaining compatible with Clay default renderers
 
 ## Setup
+
+## Overview
+<img src="docs/Brick_StackDiagram.drawio.png" />
 
 ## Examples
 
