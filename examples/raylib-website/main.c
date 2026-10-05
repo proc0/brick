@@ -123,15 +123,16 @@ int main(void) {
 
         // Main Layout
         Brick_BeginLayout();
-            // A floating panel at the center of the screen
+            // Outer container
             Brick_BeginPanel();
+                // Component tabs
                 Brick_BeginVerticalBox();
                     Brick_LayoutToggleGroup(Entities_TabGroupId);
                 Brick_EndVerticalBox();
                 
-                Brick_BeginVerticalLayout();
+                // Main content
+                Brick_BeginVerticalLayoutEx(BRICK_ALIGN_CENTER);
                     Brick_LayoutLabel(BrickTitle_LabelId);
-
 
                     Brick_BeginPanel();
                         if (Brick_IsButtonToggled(ElementText_TabId)) {

@@ -1,7 +1,7 @@
 # Brick
 ### Render-agnostic, header-only UI Component Library for Clay
 
-Brick is render agnostic UI component library extending the UI layout library [Clay](https://github.com/nicbarker/clay). Brick provides out-of-the-box components for quick and flexible use while retaining full performance and customization. Brick adds a very thin layer of state on top of Clay to keep track of components and their state, including an event system. 
+Brick is render agnostic UI component library extending the UI layout library [Clay](https://github.com/nicbarker/clay). Brick provides components for quick and flexible use while retaining full performance and customization, and adds a very thin layer of state on top of Clay to keep track of components and their state, including an event system. 
 
 ## Features
 
@@ -14,10 +14,12 @@ Brick is render agnostic UI component library extending the UI layout library [C
 - Small STB header-only library for C99, C++20 and above
 - Render agnostic
 
-Future versions tentative features:
+Future potential features:
 - Reactive layouts adapt to window resizing
 - Default renderers for multiple graphics libs
 - Unified style effects with shaders, i.e. drop shadows and gradients
+
+For a detailed explanation see [Overview](#).
 
 ## Contents
 
