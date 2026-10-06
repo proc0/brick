@@ -134,7 +134,9 @@ int main(void) {
                 Brick_BeginVerticalLayoutEx(BRICK_ALIGN_CENTER);
                     Brick_LayoutLabel(BrickTitle_LabelId);
 
-                    Brick_BeginPanel();
+                    Brick_BeginPanelEx(BRICK_ALIGN_MIDDLE);
+                        Brick_BeginSubPanelEx(0.6f, BRICK_ALIGN_MIDDLE);
+
                         if (Brick_IsButtonToggled(ElementText_TabId)) {
                             Brick_InlineText("Text");
 
@@ -166,6 +168,7 @@ int main(void) {
                             Brick_InlineText("ScrollBox");
                             
                         }
+                        Brick_EndSubPanel();
                     Brick_EndPanel();
                 Brick_EndVerticalLayout();
 
