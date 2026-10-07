@@ -38,6 +38,7 @@ int main(void) {
     // Elements and Components
 
     // Text
+    Brick_ComponentId ElementText_LabelId = Brick_CreateLabelEx("Text", 0, 36);
     Brick_ComponentId ElementText_TabId = Brick_CreateButton("Text");
     Brick_ElementId ElementText_TextId = Brick_CreateText("Text");
 
@@ -83,6 +84,8 @@ int main(void) {
     };
     Brick_ComponentId Entities_TabGroupId = Brick_CreateToggleGroup(EntitiesTabIds, 9);
 
+    Brick_ContainerSettings Comp_ContainerSettings = PLEX(Brick_ContainerSettings){ 0, BRICK_ALIGN_MIDDLE, CLAY_TOP_TO_BOTTOM };
+
     while(!WindowShouldClose()) {
         // Use Brick_Resize with window dimensions for esponsive element and container sizes
         if (IsWindowResized()) {
@@ -126,7 +129,7 @@ int main(void) {
             // Outer container
             Brick_BeginPanel();
                 // Component tabs
-                Brick_BeginVerticalBox();
+                Brick_BeginVerticalBoxEx(BRICK_ALIGN_MIDDLE);
                     Brick_LayoutToggleGroup(Entities_TabGroupId);
                 Brick_EndVerticalBox();
                 
@@ -134,20 +137,26 @@ int main(void) {
                 Brick_BeginVerticalLayoutEx(BRICK_ALIGN_CENTER);
                     Brick_LayoutLabel(BrickTitle_LabelId);
 
-                    Brick_BeginPanelEx(PLEX(Brick_ContainerSettings){ 0, BRICK_ALIGN_MIDDLE, CLAY_LEFT_TO_RIGHT });
-                        Brick_BeginPanelEx(PLEX(Brick_ContainerSettings){ 0.6f, BRICK_ALIGN_MIDDLE, CLAY_TOP_TO_BOTTOM });
+                    Brick_BeginPanelEx(PLEX(Brick_ContainerSettings){ 0, BRICK_ALIGN_LEFT, CLAY_TOP_TO_BOTTOM });
 
                         if (Brick_IsButtonToggled(ElementText_TabId)) {
-                            Brick_InlineText("Text");
+                            Brick_LayoutLabel(ElementText_LabelId);
+                            Brick_InlineText("A simple text element. It can be created and used in the layout with an ID, or just using the inline function:\n\nBrick_CreateText(const char* string)\nBrick_CreateTextEx(const char* string, uint16_t fontId, uint16_t fontSize)\n\nBrick_LayoutText(textId)\n\nBrick_InlineText(const char* string)\nBrick_InlineTextEx(const char* string, uint16_t fontId, uint16_t fontSize)\n\n");
 
-                            Brick_LayoutText(ElementText_TextId);
+                            Brick_BeginPanelEx(Comp_ContainerSettings);
+                                Brick_LayoutText(ElementText_TextId);
+                            Brick_EndPanel();
                         } else if (Brick_IsButtonToggled(ElementImage_TabId)) {
                             Brick_InlineText("Image");
                             
-                            Brick_LayoutImage(ElementImage_ImageId);
+                            Brick_BeginPanelEx(Comp_ContainerSettings);
+                                Brick_LayoutImage(ElementImage_ImageId);
+                            Brick_EndPanel();
                         } else if (Brick_IsButtonToggled(ComponentLabel_TabId)) {
                             Brick_InlineText("Label");
-                            
+
+                            // Brick_BeginPanelEx(Comp_ContainerSettings);
+                            // Brick_EndPanel();
                         } else if (Brick_IsButtonToggled(ComponentButton_TabId)) {
                             Brick_InlineText("Button");
                             
@@ -157,7 +166,9 @@ int main(void) {
                         } else if (Brick_IsButtonToggled(ComponentImageButton_TabId)) {
                             Brick_InlineText("Image Button");
                             
-                            Brick_LayoutImageButton(ComponentImageButton_ButtonId);
+                            Brick_BeginPanelEx(Comp_ContainerSettings);
+                                Brick_LayoutImageButton(ComponentImageButton_ButtonId);
+                            Brick_EndPanel();
                         } else if (Brick_IsButtonToggled(ComponentLabelGroup_TabId)) {
                             Brick_InlineText("Label Group");
                             
@@ -168,7 +179,6 @@ int main(void) {
                             Brick_InlineText("ScrollBox");
                             
                         }
-                        Brick_EndPanel();
                     Brick_EndPanel();
                 Brick_EndVerticalLayout();
 
