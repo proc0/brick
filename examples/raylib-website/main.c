@@ -134,8 +134,8 @@ int main(void) {
                 Brick_BeginVerticalLayoutEx(BRICK_ALIGN_CENTER);
                     Brick_LayoutLabel(BrickTitle_LabelId);
 
-                    Brick_BeginPanelEx(BRICK_ALIGN_MIDDLE);
-                        Brick_BeginSubPanelEx(0.6f, BRICK_ALIGN_MIDDLE);
+                    Brick_BeginPanelEx(PLEX(Brick_ContainerSettings){ 0, BRICK_ALIGN_MIDDLE, CLAY_LEFT_TO_RIGHT });
+                        Brick_BeginPanelEx(PLEX(Brick_ContainerSettings){ 0.6f, BRICK_ALIGN_MIDDLE, CLAY_TOP_TO_BOTTOM });
 
                         if (Brick_IsButtonToggled(ElementText_TabId)) {
                             Brick_InlineText("Text");
@@ -168,7 +168,7 @@ int main(void) {
                             Brick_InlineText("ScrollBox");
                             
                         }
-                        Brick_EndSubPanel();
+                        Brick_EndPanel();
                     Brick_EndPanel();
                 Brick_EndVerticalLayout();
 
