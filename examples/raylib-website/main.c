@@ -14,6 +14,8 @@
 #define SCREEN_HEIGHT 720
 #define FONT_PATH "resources/Roboto-Regular.ttf"
 
+#define SCROLLBOX_TEXT "Faucibus purus in massa tempor nec. Nec ullamcorper sit amet risus nullam eget felis eget nunc. Diam vulputate ut pharetra sit amet aliquam id diam. Lacus suspendisse faucibus interdum posuere lorem. A diam sollicitudin tempor id. Amet massa vitae tortor condimentum lacinia. Aliquet nibh praesent tristique magna."
+
 int main(void) {
     // Initialize the Clay renderer. This function calls InitOverlay which loads shaders for transparent windows.
     // Additionally it also initializes Raylib with InitWindow. If Raylib needs to initialize separately, simply
@@ -79,13 +81,29 @@ int main(void) {
     Brick_ComponentId ComponentLabelGroup_LabelId = Brick_CreateLabelEx("Label Group", 0, COMP_TITLE_FONT_SIZE);
     Brick_ComponentId ComponentLabelGroup_TabId = Brick_CreateButton("Label Group");
     
+    Brick_ComponentId ComponentLabel3_LabelId = Brick_CreateLabel("Label 1");
+    Brick_ComponentId ComponentLabel4_LabelId = Brick_CreateLabel("Label 2");
+    Brick_ComponentId ComponentLabel5_LabelId = Brick_CreateLabel("Label 3");
+
+    Brick_ComponentId labelGroup[3] = { ComponentLabel3_LabelId, ComponentLabel4_LabelId, ComponentLabel5_LabelId };
+    Brick_ComponentId ComponentLabelGroup_LabelGroupId = Brick_CreateGroup(labelGroup, 3);
+
     // Button Group
     Brick_ComponentId ComponentButtonGroup_LabelId = Brick_CreateLabelEx("Button Group", 0, COMP_TITLE_FONT_SIZE);
     Brick_ComponentId ComponentButtonGroup_TabId = Brick_CreateButton("Button Group");
+    
+    Brick_ComponentId ComponentButton3_ButtonId = Brick_CreateButton("Button 1");
+    Brick_ComponentId ComponentButton4_ButtonId = Brick_CreateButton("Button 2");
+    Brick_ComponentId ComponentButton5_ButtonId = Brick_CreateButton("Button 3");
+
+    Brick_ComponentId buttonGroup[3] = { ComponentButton3_ButtonId, ComponentButton4_ButtonId, ComponentButton5_ButtonId };
+    Brick_ComponentId ComponentButtonGroup_ButtonGroupId = Brick_CreateGroup(buttonGroup, 3);
 
     // Scroll Box
     Brick_ComponentId ContainerScrollBox_LabelId = Brick_CreateLabelEx("ScrollBox", 0, COMP_TITLE_FONT_SIZE);
     Brick_ComponentId ContainerScrollBox_TabId = Brick_CreateButton("ScrollBox");
+
+    Brick_ContainerId ContainerScrollBox_ScrollBoxId = Brick_CreateScrollBox();
 
     // Sidebar tabs
     Brick_ComponentId EntitiesTabIds[9] = { 
@@ -201,15 +219,24 @@ int main(void) {
                         } else if (Brick_IsButtonToggled(ComponentLabelGroup_TabId)) {
                             Brick_LayoutLabel(ComponentLabelGroup_LabelId);
                             Brick_InlineText("Label Group");
-                            
+
+                            Brick_BeginPanelEx(Comp_ContainerSettings);
+                                Brick_LayoutGroup(ComponentLabelGroup_LabelGroupId);
+                            Brick_EndPanel();
                         } else if (Brick_IsButtonToggled(ComponentButtonGroup_TabId)) {
                             Brick_LayoutLabel(ComponentButtonGroup_LabelId);
                             Brick_InlineText("Button Group");
-                            
+
+                            Brick_BeginPanelEx(Comp_ContainerSettings);
+                                Brick_LayoutGroup(ComponentButtonGroup_ButtonGroupId);
+                            Brick_EndPanel();
                         } else if (Brick_IsButtonToggled(ContainerScrollBox_TabId)) {
                             Brick_LayoutLabel(ContainerScrollBox_LabelId);
                             Brick_InlineText("ScrollBox");
-                            
+
+                            Brick_BeginScrollBox(ContainerScrollBox_ScrollBoxId);
+                                Brick_InlineText(SCROLLBOX_TEXT);
+                            Brick_EndScrollBox();                            
                         }
                     Brick_EndPanel();
                 Brick_EndVerticalLayout();
