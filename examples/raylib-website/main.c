@@ -37,37 +37,54 @@ int main(void) {
 
     // Elements and Components
 
+    #define COMP_TITLE_FONT_SIZE 36
+
     // Text
-    Brick_ComponentId ElementText_LabelId = Brick_CreateLabelEx("Text", 0, 36);
+    Brick_ComponentId ElementText_LabelId = Brick_CreateLabelEx("Text", 0, COMP_TITLE_FONT_SIZE);
     Brick_ComponentId ElementText_TabId = Brick_CreateButton("Text");
     Brick_ElementId ElementText_TextId = Brick_CreateText("Text");
 
     // Image
+    Brick_ComponentId ElementImage_LabelId = Brick_CreateLabelEx("Image", 0, COMP_TITLE_FONT_SIZE);
     Brick_ComponentId ElementImage_TabId = Brick_CreateButton("Image");
 
     Texture2D bricks = LoadTexture("resources/bricks.png");
     Brick_ElementId ElementImage_ImageId = Brick_CreateImage(bricks.width, bricks.height, &bricks);
 
     // Label
+    Brick_ComponentId ComponentLabel_LabelId = Brick_CreateLabelEx("Label", 0, COMP_TITLE_FONT_SIZE);
     Brick_ComponentId ComponentLabel_TabId = Brick_CreateButton("Label");
+
+    Brick_ComponentId ComponentLabel2_LabelId = Brick_CreateLabel("Label");
     
     // Button
+    Brick_ComponentId ComponentButton_LabelId = Brick_CreateLabelEx("Button", 0, COMP_TITLE_FONT_SIZE);
     Brick_ComponentId ComponentButton_TabId = Brick_CreateButton("Button");
     
+    Brick_ComponentId ComponentButton_ButtonId = Brick_CreateButton("Button");
+    
     // Label Button
+    Brick_ComponentId ComponentLabelButton_LabelId = Brick_CreateLabelEx("Label Button", 0, COMP_TITLE_FONT_SIZE);
     Brick_ComponentId ComponentLabelButton_TabId = Brick_CreateButton("Label Button");
+
+    Brick_ComponentId ComponentLabelButton_LabelButtonId = Brick_CreateLabelButton("Label Button");
     
     // Image Button
+    Brick_ComponentId ComponentImageButton_LabelId = Brick_CreateLabelEx("Image Button", 0, COMP_TITLE_FONT_SIZE);
     Brick_ComponentId ComponentImageButton_TabId = Brick_CreateButton("Image Button");
-    Brick_ComponentId ComponentImageButton_ButtonId = Brick_CreateImageButton(bricks.width, bricks.height, &bricks);
+
+    Brick_ComponentId ComponentImageButton_ImageButtonId = Brick_CreateImageButton(bricks.width, bricks.height, &bricks);
 
     // Label Group
+    Brick_ComponentId ComponentLabelGroup_LabelId = Brick_CreateLabelEx("Label Group", 0, COMP_TITLE_FONT_SIZE);
     Brick_ComponentId ComponentLabelGroup_TabId = Brick_CreateButton("Label Group");
     
     // Button Group
+    Brick_ComponentId ComponentButtonGroup_LabelId = Brick_CreateLabelEx("Button Group", 0, COMP_TITLE_FONT_SIZE);
     Brick_ComponentId ComponentButtonGroup_TabId = Brick_CreateButton("Button Group");
 
     // Scroll Box
+    Brick_ComponentId ContainerScrollBox_LabelId = Brick_CreateLabelEx("ScrollBox", 0, COMP_TITLE_FONT_SIZE);
     Brick_ComponentId ContainerScrollBox_TabId = Brick_CreateButton("ScrollBox");
 
     // Sidebar tabs
@@ -147,35 +164,50 @@ int main(void) {
                                 Brick_LayoutText(ElementText_TextId);
                             Brick_EndPanel();
                         } else if (Brick_IsButtonToggled(ElementImage_TabId)) {
+                            Brick_LayoutLabel(ElementImage_LabelId);
                             Brick_InlineText("Image");
                             
                             Brick_BeginPanelEx(Comp_ContainerSettings);
                                 Brick_LayoutImage(ElementImage_ImageId);
                             Brick_EndPanel();
                         } else if (Brick_IsButtonToggled(ComponentLabel_TabId)) {
+                            Brick_LayoutLabel(ComponentLabel_LabelId);
                             Brick_InlineText("Label");
 
-                            // Brick_BeginPanelEx(Comp_ContainerSettings);
-                            // Brick_EndPanel();
+                            Brick_BeginPanelEx(Comp_ContainerSettings);
+                                Brick_LayoutLabel(ComponentLabel2_LabelId);
+                            Brick_EndPanel();
                         } else if (Brick_IsButtonToggled(ComponentButton_TabId)) {
+                            Brick_LayoutLabel(ComponentButton_LabelId);
                             Brick_InlineText("Button");
                             
+                            Brick_BeginPanelEx(Comp_ContainerSettings);
+                                Brick_LayoutButton(ComponentButton_ButtonId);
+                            Brick_EndPanel();
                         } else if (Brick_IsButtonToggled(ComponentLabelButton_TabId)) {
+                            Brick_LayoutLabel(ComponentLabelButton_LabelId);
                             Brick_InlineText("Label Button");
                             
+                            Brick_BeginPanelEx(Comp_ContainerSettings);
+                                Brick_LayoutLabelButton(ComponentLabelButton_LabelButtonId);
+                            Brick_EndPanel();
                         } else if (Brick_IsButtonToggled(ComponentImageButton_TabId)) {
+                            Brick_LayoutLabel(ComponentImageButton_LabelId);
                             Brick_InlineText("Image Button");
                             
                             Brick_BeginPanelEx(Comp_ContainerSettings);
-                                Brick_LayoutImageButton(ComponentImageButton_ButtonId);
+                                Brick_LayoutImageButton(ComponentImageButton_ImageButtonId);
                             Brick_EndPanel();
                         } else if (Brick_IsButtonToggled(ComponentLabelGroup_TabId)) {
+                            Brick_LayoutLabel(ComponentLabelGroup_LabelId);
                             Brick_InlineText("Label Group");
                             
                         } else if (Brick_IsButtonToggled(ComponentButtonGroup_TabId)) {
+                            Brick_LayoutLabel(ComponentButtonGroup_LabelId);
                             Brick_InlineText("Button Group");
                             
                         } else if (Brick_IsButtonToggled(ContainerScrollBox_TabId)) {
+                            Brick_LayoutLabel(ContainerScrollBox_LabelId);
                             Brick_InlineText("ScrollBox");
                             
                         }
