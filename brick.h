@@ -2070,7 +2070,11 @@ void Brick_BeginScrollBox(Brick_ContainerId scrollBoxId) {
 
     Clay__OpenElementWithId(scrollBox->clayParentId);
     Clay__ConfigureOpenElement(PLEX(Clay_ElementDeclaration) {
-        .layout = { 
+        .layout = {
+            .sizing = { 
+                .width = CLAY_SIZING_GROW(0),
+                .height = CLAY_SIZING_GROW(0),
+            },
             .padding = CLAY_PADDING_ALL(32), 
             .childGap = 12, 
             .layoutDirection = CLAY_TOP_TO_BOTTOM 

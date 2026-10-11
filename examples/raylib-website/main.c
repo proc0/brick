@@ -14,7 +14,18 @@
 #define SCREEN_HEIGHT 720
 #define FONT_PATH "resources/Roboto-Regular.ttf"
 
-#define SCROLLBOX_TEXT "Faucibus purus in massa tempor nec. Nec ullamcorper sit amet risus nullam eget felis eget nunc. Diam vulputate ut pharetra sit amet aliquam id diam. Lacus suspendisse faucibus interdum posuere lorem. A diam sollicitudin tempor id. Amet massa vitae tortor condimentum lacinia. Aliquet nibh praesent tristique magna."
+#define ELEMENT_TEXT_SUMMARY "A simple text element. It can be created and used in the layout with an ID, or just using the inline function:\n\nBrick_ElementId Brick_CreateText(const char* string)\nBrick_CreateTextEx(const char* string, uint16_t fontId, uint16_t fontSize)\n\nvoid Brick_LayoutText(textId)\n\nvoid Brick_InlineText(const char* string)\nvoid Brick_InlineTextEx(const char* string, uint16_t fontId, uint16_t fontSize)\n\n"
+#define ELEMENT_IMAGE_SUMMARY "An image element depends on the whatever data the renderer expects to display pixels on the screen. It could be an image format or a texture or something else. This data is passed through in the Clay_RenderCommand.\n\nBrick_ElementId Brick_CreateImage(float width, float height, void* imageData)\n\nvoid Brick_LayoutImage(Brick_ElementId imageId)\n"
+
+#define COMPONENT_LABEL_SUMMARY "A text element in a box. Labels are the simplest components that enclose text elements in a box element that contains padding, alignment and other properties.\n\nBrick_ComponentId Brick_CreateLabel(const char* string)\nBrick_ComponentId Brick_CreateLabelEx(const char* string, uint16_t fontId, uint16_t fontSize)\n\nvoid Brick_LayoutLabel(ComponentId labelId)\n"
+#define COMPONENT_BUTTON_SUMMARY "The humble button. It is essentially a label with a background plus interactivity. It tracks its different states like hover, pressed, released that an be queried for UI functionality.\n\nBrick_ComponentId Brick_CreateButton(const char* text)\nBrick_ComponentId Brick_CreateButtonEx(const char* text, uint16_t fontId, uint16_t fontSize)\n\nvoid Brick_LayoutButton(Brick_ComponentId buttonId)\n"
+#define COMPONENT_LABELBUTTON_SUMMARY "A label with button interactivity. Labels do not have a background like buttons do. Label buttons act like buttons while remaining texts in a box.\n\nBrick_ComponentId Brick_CreateLabelButton(const char* text)\n\nvoid Brick_LayoutLabelButton(Brick_ComponentId buttonId)\n"
+#define COMPONENT_IMAGEBUTTON_SUMMARY "An image with button interactivity. Like label-buttons, image-buttons are images that are also interactive buttons.\n\nBrick_ComponentId Brick_CreateImageButton(float width, float height, void* imageData)\nvoid Brick_LayoutImageButton(Brick_ComponentId buttonId)\n"
+#define COMPONENT_LABELGROUP_SUMMARY "A group of labels. Create a number of labels, then use an array of label IDs to group them.\n\nBrick_ComponentId Brick_CreateLabel(const char* string)\nBrick_ComponentId labelIds[3] = { labelId1, labelId2, labelId3 }\nBrick_ComponentId Brick_CreateGroup(const Brick_ComponentId* labelIds, int32_t groupSize)\n\nvoid Brick_LayoutGroup(Brick_ComponentId labelGroupId)"
+#define COMPONENT_BUTTONGROUP_SUMMARY "A group of buttons. Create a number of buttons, then use an array of button IDs to group them.\n\nBrick_ComponentId Brick_CreateButton(const char* text)\nBrick_ComponentId buttonIds[3] = { buttonId1, buttonId2, buttonId3 }\nBrick_ComponentId Brick_CreateGroup(const Brick_ComponentId* buttonIds, int32_t groupSize)\n\nvoid Brick_LayoutGroup(Brick_ComponentId buttonGroupId)"
+
+#define CONTAINER_SCROLLBOX_SUMMARY "A container that scrolls vertically. Create the container first, then use Begin and End to enclose the content that will be scrolled:\n\nBrick_ContainerId Brick_CreateScrollBox(void)\n\nvoid Brick_BeginScrollBox(void)\n    [contents]\nvoid Brick_EndScrollBox(void)\n"
+#define CONTAINER_SCROLLBOX_TEXT "Faucibus purus in massa tempor nec. Nec ullamcorper sit amet risus nullam eget felis eget nunc. Diam vulputate ut pharetra sit amet aliquam id diam. Lacus suspendisse faucibus interdum posuere lorem. A diam sollicitudin tempor id. Amet massa vitae tortor condimentum lacinia. Aliquet nibh praesent tristique magna."
 
 int main(void) {
     // Initialize the Clay renderer. This function calls InitOverlay which loads shaders for transparent windows.
@@ -176,66 +187,68 @@ int main(void) {
 
                         if (Brick_IsButtonToggled(ElementText_TabId)) {
                             Brick_LayoutLabel(ElementText_LabelId);
-                            Brick_InlineText("A simple text element. It can be created and used in the layout with an ID, or just using the inline function:\n\nBrick_CreateText(const char* string)\nBrick_CreateTextEx(const char* string, uint16_t fontId, uint16_t fontSize)\n\nBrick_LayoutText(textId)\n\nBrick_InlineText(const char* string)\nBrick_InlineTextEx(const char* string, uint16_t fontId, uint16_t fontSize)\n\n");
+                            Brick_InlineText(ELEMENT_TEXT_SUMMARY);
 
                             Brick_BeginPanelEx(Comp_ContainerSettings);
                                 Brick_LayoutText(ElementText_TextId);
                             Brick_EndPanel();
                         } else if (Brick_IsButtonToggled(ElementImage_TabId)) {
                             Brick_LayoutLabel(ElementImage_LabelId);
-                            Brick_InlineText("Image");
+                            Brick_InlineText(ELEMENT_IMAGE_SUMMARY);
                             
                             Brick_BeginPanelEx(Comp_ContainerSettings);
                                 Brick_LayoutImage(ElementImage_ImageId);
                             Brick_EndPanel();
                         } else if (Brick_IsButtonToggled(ComponentLabel_TabId)) {
                             Brick_LayoutLabel(ComponentLabel_LabelId);
-                            Brick_InlineText("Label");
+                            Brick_InlineText(COMPONENT_LABEL_SUMMARY);
 
                             Brick_BeginPanelEx(Comp_ContainerSettings);
                                 Brick_LayoutLabel(ComponentLabel2_LabelId);
                             Brick_EndPanel();
                         } else if (Brick_IsButtonToggled(ComponentButton_TabId)) {
                             Brick_LayoutLabel(ComponentButton_LabelId);
-                            Brick_InlineText("Button");
+                            Brick_InlineText(COMPONENT_BUTTON_SUMMARY);
                             
                             Brick_BeginPanelEx(Comp_ContainerSettings);
                                 Brick_LayoutButton(ComponentButton_ButtonId);
                             Brick_EndPanel();
                         } else if (Brick_IsButtonToggled(ComponentLabelButton_TabId)) {
                             Brick_LayoutLabel(ComponentLabelButton_LabelId);
-                            Brick_InlineText("Label Button");
+                            Brick_InlineText(COMPONENT_LABELBUTTON_SUMMARY);
                             
                             Brick_BeginPanelEx(Comp_ContainerSettings);
                                 Brick_LayoutLabelButton(ComponentLabelButton_LabelButtonId);
                             Brick_EndPanel();
                         } else if (Brick_IsButtonToggled(ComponentImageButton_TabId)) {
                             Brick_LayoutLabel(ComponentImageButton_LabelId);
-                            Brick_InlineText("Image Button");
+                            Brick_InlineText(COMPONENT_IMAGEBUTTON_SUMMARY);
                             
                             Brick_BeginPanelEx(Comp_ContainerSettings);
                                 Brick_LayoutImageButton(ComponentImageButton_ImageButtonId);
                             Brick_EndPanel();
                         } else if (Brick_IsButtonToggled(ComponentLabelGroup_TabId)) {
                             Brick_LayoutLabel(ComponentLabelGroup_LabelId);
-                            Brick_InlineText("Label Group");
+                            Brick_InlineText(COMPONENT_LABELGROUP_SUMMARY);
 
                             Brick_BeginPanelEx(Comp_ContainerSettings);
                                 Brick_LayoutGroup(ComponentLabelGroup_LabelGroupId);
                             Brick_EndPanel();
                         } else if (Brick_IsButtonToggled(ComponentButtonGroup_TabId)) {
                             Brick_LayoutLabel(ComponentButtonGroup_LabelId);
-                            Brick_InlineText("Button Group");
+                            Brick_InlineText(COMPONENT_BUTTONGROUP_SUMMARY);
 
                             Brick_BeginPanelEx(Comp_ContainerSettings);
                                 Brick_LayoutGroup(ComponentButtonGroup_ButtonGroupId);
                             Brick_EndPanel();
                         } else if (Brick_IsButtonToggled(ContainerScrollBox_TabId)) {
                             Brick_LayoutLabel(ContainerScrollBox_LabelId);
-                            Brick_InlineText("ScrollBox");
+                            Brick_InlineText(CONTAINER_SCROLLBOX_SUMMARY);
 
                             Brick_BeginScrollBox(ContainerScrollBox_ScrollBoxId);
-                                Brick_InlineText(SCROLLBOX_TEXT);
+                                Brick_InlineText(CONTAINER_SCROLLBOX_TEXT);
+                                Brick_LayoutImage(ElementImage_ImageId);
+                                Brick_InlineText(CONTAINER_SCROLLBOX_TEXT);
                             Brick_EndScrollBox();                            
                         }
                     Brick_EndPanel();
