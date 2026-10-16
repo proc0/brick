@@ -12,11 +12,17 @@ set(PROJECT_VERSION "0.1.0")
 #    
 #    cmake --build build
 #    ctest --test-dir build --output-on-failure
+#   
+#  Build for Web:
+#  emcmake cmake -B build-web -S . -G "MinGW Makefiles" -DPLATFORM=Web
 #
 #  Install:
 #    cmake -B build -DCMAKE_INSTALL_PREFIX=/usr/local
 #    cmake --build build
 #    cmake --install build
+#  
+#  Install for Web:
+#  cmake --build build-web
 #
 #  Use (downstream, CMake):
 #    FetchContent_Declare(brick GIT_REPOSITORY ... GIT_TAG ...)

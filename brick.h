@@ -77,6 +77,7 @@ NOTE: DO NOT forget to close containers!
 #ifndef BRICK_HEADER
 #define BRICK_HEADER
 
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
