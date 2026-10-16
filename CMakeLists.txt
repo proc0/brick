@@ -23,6 +23,7 @@ set(PROJECT_VERSION "0.1.0")
 #  
 #  Install for Web:
 #  cmake --build build-web
+#  cmake --install build-web --component Runtime
 #
 #  Use (downstream, CMake):
 #    FetchContent_Declare(brick GIT_REPOSITORY ... GIT_TAG ...)
