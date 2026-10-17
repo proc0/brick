@@ -33,6 +33,9 @@ set(PROJECT_VERSION "0.1.0")
 #  Use (downstream, no CMake):
 #    #include "brick.h"          (with BRICK_IMPLEMENTATION in one TU)
 #    #include "renderers/..."   (optional, from Clay)
+# 
+#  Publish:
+#  git subtree push --prefix dist-web origin gh-pages
 # ============================================================================
 
 project(brick

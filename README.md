@@ -33,9 +33,8 @@ For a detailed explanation see [Overview](#).
 
 #### [Examples](#)
 
-#### [Components](#)
+#### [Components](#components-1)
 
----
 
 ## Quick Start
 
@@ -64,5 +63,105 @@ Brick objectives include:
 
 ## Components
 
+### Text
 
+A simple text element. It can be created and used in the layout with an ID, or just using the inline function:
+
+```C
+Brick_ElementId Brick_CreateText(const char* string);
+Brick_ElementId Brick_CreateTextEx(const char* string, uint16_t fontId, uint16_t fontSize);
+
+void Brick_LayoutText(Brick_ElementId textId);
+
+void Brick_InlineText(const char* string);
+void Brick_InlineTextEx(const char* string, uint16_t fontId, uint16_t fontSize);
+```
+
+### Image
+
+An image element depends on the whatever data the renderer expects to display pixels on the screen. It could be an image format or a texture or something else. This data is passed through in the Clay_RenderCommand.
+
+```C
+Brick_ElementId Brick_CreateImage(float width, float height, void* imageData);
+
+void Brick_LayoutImage(Brick_ElementId imageId);
+```
+
+### Label
+
+A text element in a box. Labels are the simplest components that enclose text elements in a box element that contains padding, alignment and other properties.
+
+```C
+Brick_ComponentId Brick_CreateLabel(const char* string);
+Brick_ComponentId Brick_CreateLabelEx(const char* string, uint16_t fontId, uint16_t fontSize);
+
+void Brick_LayoutLabel(Brick_ComponentId labelId);
+```
+
+### Button
+
+The humble button. It is essentially a label with a background plus interactivity. It tracks its different states like hover, pressed, released that an be queried for UI functionality.
+
+```C
+Brick_ComponentId Brick_CreateButton(const char* text);
+Brick_ComponentId Brick_CreateButtonEx(const char* text, uint16_t fontId, uint16_t fontSize);
+
+void Brick_LayoutButton(Brick_ComponentId buttonId);
+```
+
+### Label Button
+
+A label with button interactivity. Labels do not have a background like buttons do. Label buttons act like buttons while remaining texts in a box.
+
+```C
+Brick_ComponentId Brick_CreateLabelButton(const char* text);
+
+void Brick_LayoutLabelButton(Brick_ComponentId buttonId);
+```
+
+### Image Button
+
+An image with button interactivity. Like label-buttons, image-buttons are images that are also interactive buttons.
+
+```C
+Brick_ComponentId Brick_CreateImageButton(float width, float height, void* imageData);
+
+void Brick_LayoutImageButton(Brick_ComponentId buttonId);
+```
+
+### Label Group
+
+A group of labels. Create a number of labels, then use an array of label IDs to group them.
+
+```C
+Brick_ComponentId Brick_CreateLabel(const char* string);
+Brick_ComponentId labelIds[3] = { labelId1, labelId2, labelId3 };
+Brick_ComponentId Brick_CreateGroup(const Brick_ComponentId* labelIds, int32_t groupSize);
+
+void Brick_LayoutGroup(Brick_ComponentId labelGroupId);
+```
+
+### Button Group
+
+A group of buttons. Create a number of buttons, then use an array of button IDs to group them.
+
+```C
+Brick_ComponentId Brick_CreateButton(const char* text);
+Brick_ComponentId buttonIds[3] = { buttonId1, buttonId2, buttonId3 };
+Brick_ComponentId Brick_CreateGroup(const Brick_ComponentId* buttonIds, int32_t groupSize);
+
+void Brick_LayoutGroup(Brick_ComponentId buttonGroupId);
+```
+
+### Scroll Box
+
+A container that scrolls vertically. Create the container first, then use Begin and End to enclose the content that will be scrolled:
+
+```C
+Brick_ContainerId Brick_CreateScrollBox(void);
+
+void Brick_BeginScrollBox(void);
+// scroll box contents
+void Brick_EndScrollBox(void);
+```
 
