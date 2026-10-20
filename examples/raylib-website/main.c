@@ -62,6 +62,7 @@ int main(void) {
     Brick_ComponentId ElementImage_TabId = Brick_CreateButton("Image");
 
     Texture2D bricks = LoadTexture("resources/bricks.png");
+    SetTextureWrap(bricks, TEXTURE_WRAP_REPEAT);
     Brick_ElementId ElementImage_ImageId = Brick_CreateImage(bricks.width, bricks.height, &bricks);
 
     // Label
@@ -132,6 +133,8 @@ int main(void) {
 
     Brick_ContainerSettings Comp_ContainerSettings = PLEX(Brick_ContainerSettings){ 0, BRICK_ALIGN_MIDDLE, CLAY_TOP_TO_BOTTOM };
 
+    Rectangle sourceTargetBg = PLEX(Rectangle){0, 0, GetScreenWidth(), GetScreenHeight()};
+    
     while(!WindowShouldClose()) {
         // Use Brick_Resize with window dimensions for esponsive element and container sizes
         if (IsWindowResized()) {
@@ -166,10 +169,15 @@ int main(void) {
             SetMouseCursor(MOUSE_CURSOR_DEFAULT);
         }
         
+        if (IsWindowResized()) {
+            sourceTargetBg = PLEX(Rectangle){0, 0, GetScreenWidth(), GetScreenHeight()};
+        }
+        
         // Raylib begin frame
         BeginDrawing();
         ClearBackground(DARKGRAY);
-
+        // DrawTexture(bricks, 540, 360, WHITE);
+        DrawTexturePro(bricks, sourceTargetBg, sourceTargetBg, (Vector2){0,0}, 0, WHITE);
         // Main Layout
         Brick_BeginLayout();
             // Outer container

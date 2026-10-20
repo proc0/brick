@@ -1945,7 +1945,7 @@ Brick_ComponentId Brick_CreateToggleGroup(Brick_ComponentId* componentIds, int32
         if(componentIds[i].type == BRICK_COMPONENT_TYPE_LABEL) {
             Brick_Label* label = Brick_Label_IndexGet(componentIds[i].index);
             componentIds[i] = Brick_CreateLabelButton(label->text.string.chars);
-        } else if(componentIds[i].type == BRICK_COMPONENT_TYPE_BUTTON){
+        } else if(componentIds[i].type == BRICK_COMPONENT_TYPE_BUTTON && componentIds[i].subType == BRICK_COMPONENT_TYPE_NONE){
             Brick_Button* button = Brick_Button_IndexGet(componentIds[i].index);
             button->id.subType = BRICK_COMPONENT_SUBTYPE_TOGGLE;
         }
@@ -2202,6 +2202,7 @@ void Brick_BeginHorizontalLayout(void) {
     Clay__ConfigureOpenElement(PLEX(Clay_ElementDeclaration) {
         .layout = {
             .sizing = { 
+                .height = CLAY_SIZING_GROW(0),
                 .width = CLAY_SIZING_GROW(0),
             },
             .childGap = BRICK_STYLE_PADDING_SMALL, 
@@ -2217,6 +2218,7 @@ void Brick_BeginHorizontalLayoutEx(Brick_Align alignment) {
     Clay__ConfigureOpenElement(PLEX(Clay_ElementDeclaration) {
         .layout = {
             .sizing = { 
+                .height = CLAY_SIZING_GROW(0),
                 .width = CLAY_SIZING_GROW(0),
             },
             .childGap = BRICK_STYLE_PADDING_SMALL, 
@@ -2240,6 +2242,7 @@ void Brick_BeginVerticalLayout(void) {
         .layout = {
             .sizing = { 
                 .height = CLAY_SIZING_GROW(0),
+                .width = CLAY_SIZING_GROW(0),
             },
             .childGap = BRICK_STYLE_PADDING_SMALL, 
             .childAlignment = { .y = CLAY_ALIGN_Y_TOP }, 
@@ -2256,6 +2259,7 @@ void Brick_BeginVerticalLayoutEx(Brick_Align alignment) {
         .layout = {
             .sizing = { 
                 .height = CLAY_SIZING_GROW(0),
+                .width = CLAY_SIZING_GROW(0),
             },
             .childGap = BRICK_STYLE_PADDING_SMALL, 
             .childAlignment = g_brick_alignment[alignment], 

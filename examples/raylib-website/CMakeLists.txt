@@ -8,7 +8,7 @@ set(CMAKE_C_STANDARD 99)
 include(FetchContent)
 set(FETCHCONTENT_QUIET FALSE)
 
-set(BUILD_WEB ON)
+# set(BUILD_WEB ON)
 
 # LOCAL_EM_INCLUDE - Emscripten Include path REQUIRED for WEB
 if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
