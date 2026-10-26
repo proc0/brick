@@ -2202,8 +2202,8 @@ void Brick_BeginHorizontalLayout(void) {
     Clay__ConfigureOpenElement(PLEX(Clay_ElementDeclaration) {
         .layout = {
             .sizing = { 
-                .height = CLAY_SIZING_GROW(0),
                 .width = CLAY_SIZING_GROW(0),
+                .height = CLAY_SIZING_GROW(0),
             },
             .childGap = BRICK_STYLE_PADDING_SMALL, 
             .childAlignment = { .x = CLAY_ALIGN_X_LEFT }, 
@@ -2218,8 +2218,8 @@ void Brick_BeginHorizontalLayoutEx(Brick_Align alignment) {
     Clay__ConfigureOpenElement(PLEX(Clay_ElementDeclaration) {
         .layout = {
             .sizing = { 
-                .height = CLAY_SIZING_GROW(0),
                 .width = CLAY_SIZING_GROW(0),
+                .height = CLAY_SIZING_GROW(0),
             },
             .childGap = BRICK_STYLE_PADDING_SMALL, 
             .childAlignment = g_brick_alignment[alignment], 
@@ -2241,8 +2241,8 @@ void Brick_BeginVerticalLayout(void) {
     Clay__ConfigureOpenElement(PLEX(Clay_ElementDeclaration) {
         .layout = {
             .sizing = { 
-                .height = CLAY_SIZING_GROW(0),
                 .width = CLAY_SIZING_GROW(0),
+                .height = CLAY_SIZING_GROW(0),
             },
             .childGap = BRICK_STYLE_PADDING_SMALL, 
             .childAlignment = { .y = CLAY_ALIGN_Y_TOP }, 
@@ -2258,8 +2258,8 @@ void Brick_BeginVerticalLayoutEx(Brick_Align alignment) {
     Clay__ConfigureOpenElement(PLEX(Clay_ElementDeclaration) {
         .layout = {
             .sizing = { 
-                .height = CLAY_SIZING_GROW(0),
                 .width = CLAY_SIZING_GROW(0),
+                .height = CLAY_SIZING_GROW(0),
             },
             .childGap = BRICK_STYLE_PADDING_SMALL, 
             .childAlignment = g_brick_alignment[alignment], 
